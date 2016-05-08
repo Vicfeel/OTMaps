@@ -6,7 +6,7 @@
  */
 
 define(["esri/InfoTemplate", "esri/layers/FeatureLayer", "esri/tasks/query", "esri/graphic"], function (InfoTemplate, FeatureLayer, Query, Graphic) {
-    function ThematicMap(options, callBack) {
+    function ThematicMap(options) {
         if (arguments.length) {
             //默认属性
             var defaultOpts = {
@@ -17,48 +17,53 @@ define(["esri/InfoTemplate", "esri/layers/FeatureLayer", "esri/tasks/query", "es
                 dataTag: "",
                 corString: [],
                 /* 可选参数 */
-                fieldName: 'STAT_VALUE',
-                legendID: 'legendDiv'
+                fieldName: 'STAT_VALUE'
             };
             for (var item in defaultOpts) {
                 options[item] = options[item] || defaultOpts[item];
             }
             //必要属性检查
             if (!options.map || !options.layerUrl || !options.corString || !options.dataTag) {
-                throw new Error('初始化错误：缺少必要参数！');
+                throw new Error('ThematicMap错误1001：构造函数缺少必要参数！');
             }
             this.options = options;
             this.map = options.map;
-            init(this, callBack);
+            this.fieldName = options.fieldName;
+            this.drawLayer = null;
         }
     }
 
     //初始化
-    function init(me, callBack) {
-        var infoTemplate = new InfoTemplate("值为${" + me.options.fieldName + "}", "");
+    ThematicMap.prototype.init = function (callBack) {
+        var me = this;
+        if (me.drawLayer) {
+            me.map.removeLayer(me.drawLayer);
+            me.drawLayer = null;
+        }
+
+        var infoTemplate = new InfoTemplate("值为${" + me.fieldName + "}", "");
         var layer = new FeatureLayer(me.options.layerUrl, {
             "mode": FeatureLayer.MODE_SNAPSHOT,
             "opacity": 1
         });
-
         var query = new Query();
         query.outFields = ["*"];
         query.where = "1=1";
         layer.queryFeatures(query, function (data) {
             data.fields.push({
-                "name": me.options.fieldName,
+                "name": me.fieldName,
                 "alias": "统计数据",
                 "type": "esriFieldTypeDouble"
             });
             var features = [];
             data.features.forEach(function (v) {
                 var attr = {};
-                for(var att in v.attributes)
+                for (var att in v.attributes)
                     attr[att] = v.attributes[att];
                 for (var i = 0; i < me.options.statData.length; i++) {
                     var checked = 0;
                     me.options.corString.forEach(function (item) {
-                        var fd = item.substring(0,item.indexOf('='));
+                        var fd = item.substring(0, item.indexOf('='));
                         var value = item.substring(item.indexOf('=') + 1);
                         if (fd.indexOf('&') < 0) {
                             if (me.options.statData[i][fd] == v.attributes[value])
@@ -97,18 +102,18 @@ define(["esri/InfoTemplate", "esri/layers/FeatureLayer", "esri/tasks/query", "es
             });
             me.options.map.on("layers-add-result", function () {
                 me.drawLayer.applyEdits(features, null, null);
-                callBack();
+                if (callBack) callBack();
             });
-            me.options.map.addLayers([me.drawLayer]);
+            me.map.addLayers([me.drawLayer]);
         });
     }
 
     /* 公有方法 */
     //绘制专题图
-    ThematicMap.prototype.draw = function (callback, err) {
+    ThematicMap.prototype.draw = function (callback) {
     };
     //专题图重绘
-    ThematicMap.prototype.fresh = function (callback, err) {
+    ThematicMap.prototype.fresh = function (callback) {
     };
     //清除专题图
     ThematicMap.prototype.clear = function () {
