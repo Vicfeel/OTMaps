@@ -5,119 +5,94 @@
  * @description 专题图父类
  */
 
-define(["esri/InfoTemplate", "esri/layers/FeatureLayer", "esri/tasks/query", "esri/graphic"], function (InfoTemplate, FeatureLayer, Query, Graphic) {
-    function ThematicMap(options) {
-        if (arguments.length) {
-            //默认属性
-            var defaultOpts = {
-                /* 必要参数 */
-                map: null,
-                layerUrl: null,
+define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
+    function ThematicMap() {
+        this.config = {
+            map: null,
+            layer: {
+                simple: true,
+                id: 'statUnits',
+                fieldName: 'STAT_VALUE',
+                url: "",
                 statData: [],
                 dataTag: "",
-                corString: [],
-                /* 可选参数 */
-                fieldName: 'STAT_VALUE'
-            };
-            for (var item in defaultOpts) {
-                options[item] = options[item] || defaultOpts[item];
+                corString: []
+            },
+            popup: {
+                show: true,
+                title: "值为",
+                content: "${STAT_VALUE}"
+            },
+            style: {
+                color: '#27ae60',
+                classicMethod: 'quantile'
+            },
+            label: {
+                show: false,
+                field: 'NAME',
+                size: 13
+            },
+            legend: {
+                show: false,
+                id: 'vlegend',
+                title: '耕地面积（平方千米)'
             }
-            //必要属性检查
-            if (!options.map || !options.layerUrl || !options.corString || !options.dataTag) {
-                throw new Error('ThematicMap错误1001：构造函数缺少必要参数！');
-            }
-            this.options = options;
-            this.map = options.map;
-            this.fieldName = options.fieldName;
-            this.drawLayer = null;
-        }
+        };
     }
 
-    //初始化
-    ThematicMap.prototype.init = function (callBack) {
+    //参数配置
+    ThematicMap.prototype.setConfig = function (options) {
         var me = this;
-        if (me.drawLayer) {
-            me.map.removeLayer(me.drawLayer);
-            me.drawLayer = null;
+        for (var obj in options) {
+            if (obj == 'map')
+                me.config.map = options.map;
+            else if (options.hasOwnProperty(obj))
+                for (var item in options[obj]) {
+                    if (options[obj].hasOwnProperty(item))
+                        me.config[obj][item] = options[obj][item];
+                }
         }
+        me.map = me.config.map;
+        return me;
+    };
+    ThematicMap.prototype.setLayer = function (options) {
+        var me = this;
+        for (var item in options) {
+            if (options.hasOwnProperty(item))
+                me.config.layer[item] = options.item;
+        }
+        return me;
+    };
+    ThematicMap.prototype.setStatData = function (data) {
+        var me = this;
+        me.config.layer.statData = data;
+        return me;
+    };
+    ThematicMap.prototype.setStyle = function (options) {
+        var me = this;
+        for (var item in options) {
+            if (options.hasOwnProperty(item))
+                me.config.style[item] = options.item;
+        }
+        return me;
+    };
 
-        var infoTemplate = new InfoTemplate("值为${" + me.fieldName + "}", "");
-        var layer = new FeatureLayer(me.options.layerUrl, {
-            "mode": FeatureLayer.MODE_SNAPSHOT,
-            "opacity": 1
-        });
-        var query = new Query();
-        query.outFields = ["*"];
-        query.where = "1=1";
-        layer.queryFeatures(query, function (data) {
-            data.fields.push({
-                "name": me.fieldName,
-                "alias": "统计数据",
-                "type": "esriFieldTypeDouble"
-            });
-            var features = [];
-            data.features.forEach(function (v) {
-                var attr = {};
-                for (var att in v.attributes)
-                    attr[att] = v.attributes[att];
-                for (var i = 0; i < me.options.statData.length; i++) {
-                    var checked = 0;
-                    me.options.corString.forEach(function (item) {
-                        var fd = item.substring(0, item.indexOf('='));
-                        var value = item.substring(item.indexOf('=') + 1);
-                        if (fd.indexOf('&') < 0) {
-                            if (me.options.statData[i][fd] == v.attributes[value])
-                                checked++;
-                        }
-                        else {
-                            fd = fd.substring(1);
-                            if (me.options.statData[i][fd] == value)
-                                checked++;
-                        }
-                    });
-                    if (checked == me.options.corString.length && checked != 0) {
-                        attr[me.options.fieldName] = parseFloat(me.options.statData[i][me.options.dataTag]);
-                        break;
-                    }
-                }
-                var graphic = new Graphic(v.geometry);
-                graphic.setAttributes(attr);
-                features.push(graphic);
-            });
-            var featureCollection = {
-                "layerDefinition": {
-                    "geometryType": data.geometryType,
-                    "fields": data.fields
-                },
-                "featureSet": {
-                    "features": [],
-                    "geometryType": data.geometryType
-                }
-            };
-            me.drawLayer = new FeatureLayer(featureCollection, {
-                id: 'statUnits',
-                "mode": FeatureLayer.MODE_SNAPSHOT,
-                "infoTemplate": infoTemplate,
-                "opacity": 1
-            });
-            me.options.map.on("layers-add-result", function () {
-                me.drawLayer.applyEdits(features, null, null);
-                if (callBack) callBack();
-            });
-            me.map.addLayers([me.drawLayer]);
-        });
-    }
-
-    /* 公有方法 */
     //绘制专题图
     ThematicMap.prototype.draw = function (callback) {
     };
-    //专题图重绘
+
     ThematicMap.prototype.fresh = function (callback) {
+
     };
+
     //清除专题图
     ThematicMap.prototype.clear = function () {
-        drawLayer.clear();
+        this.map.removeLayer(this.drawLayer);
+        if (this.legend) {
+            this.legend.destroy();
+            this.lenged = null;
+        }
+        return this;
     };
 
     return ThematicMap;

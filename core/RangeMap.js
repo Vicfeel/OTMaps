@@ -5,60 +5,60 @@
  * @description 范围值专题图（分层设色图）
  */
 
-define(["app/tool/ThematicMaps/ThematicMap", "esri/renderers/smartMapping", "esri/renderers/ClassBreaksRenderer", "esri/Color", "esri/dijit/Legend", "esri/symbols/SimpleFillSymbol"],
-    function (ThematicMap, smartMapping, ClassBreaksRenderer, Color, Legend, SimpleFillSymbol) {
+define(["app/tool/ThematicMaps/ThematicMap", "app/tool/ThematicMaps/Utils/ColorUtil", "app/tool/ThematicMaps/Utils/DrawUtil",
+        "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/renderers/smartMapping", "esri/renderers/ClassBreaksRenderer", "esri/Color"],
+    function (ThematicMap, ColorUtil, DrawUtil,
+              SimpleFillSymbol, SimpleLineSymbol, smartMapping, ClassBreaksRenderer, Color) {
         function RangeMap(options, callback) {
             ThematicMap.apply(this, arguments);
         }
 
         RangeMap.prototype = new ThematicMap();
 
-        RangeMap.prototype.draw = function (options, callback) {
+        RangeMap.prototype.draw = function (callback) {
             var me = this;
-            //默认属性
-            var defaultOpts = {
-                style: 'topo',
-                classicMethod: 'quantile',
-                legendID: null
-            };
-            for (var item in defaultOpts) {
-                options[item] = options[item] || defaultOpts[item];
-            }
+            var temp = [];
+            me._oconfig = temp.push(me.config).slice(0)[0];
+            if (me.config.layer.simple)
+                DrawUtil.createSLayer.call(me, renderMap);
+            else
+                DrawUtil.createMLayer.call(me, renderMap);
 
-            if (!me.drawLayer)
-                throw new Error('ThematicMap错误1002：使用draw方法前未进行初始化[init]！');
-            //创建渲染
-            smartMapping.createClassedColorRenderer({
-                layer: me.drawLayer,
-                field: me.fieldName,
-                basemap: options.style,
-                classificationMethod: options.classicMethod
-            }).then(function (response) {
-                debugger;
+            function renderMap() {
+                var fieldName = me.config.layer.fieldName;
+                var styleConfig = me.config.style;
+                //创建渲染
+                smartMapping.createClassedColorRenderer({
+                    layer: me.drawLayer,
+                    field: fieldName,
+                    basemap: 'topo',
+                    classificationMethod: styleConfig.classicMethod
+                }).then(function (response) {
+                    var renderer = new ClassBreaksRenderer(null, fieldName);
+                    var colors = ColorUtil.getGradientColor('#ddd', styleConfig.color, response.classBreakInfos.length + 1);
+                    me._classBreakInfos = response.classBreakInfos;
+                    response.classBreakInfos.forEach(function (v, i) {
+                        var symbol = new SimpleFillSymbol();
+                        symbol.setColor(new Color(colors[i + 1]));
+                        symbol.setOutline(new SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new Color([75, 75, 75, 0.8]), 1));
+                        renderer.addBreak(v.minValue, v.maxValue, symbol);
+                    });
 
-                var renderer = new ClassBreaksRenderer(null, me.fieldName);
-                var colors = [[0, 0, 0], [20, 20, 20], [50, 50, 50], [150, 150, 150], [250, 250, 250]];
-                response.classBreakInfos.forEach(function (v, i) {
-                    renderer.addBreak(v.minValue, v.maxValue, new SimpleFillSymbol().setColor(new Color(colors[i])));
+                    me.drawLayer.setRenderer(renderer);
+                    if (me.config.label.show)
+                        DrawUtil.createLabel.call(me, me.config.label);
+                    if (me.config.legend.show)
+                        DrawUtil.createLegend.call(me, me.config.legend);
+                    me.drawLayer.redraw();
+                    if (callback) callback();
                 });
-
-
-                me.drawLayer.setRenderer(renderer);
-                me.drawLayer.redraw();
-                if (callback) callback();
-            });
-            //创建图例
-            if (options.legendID) {
-                legend = new Legend({
-                    map: me.map,
-                    layerInfos: [{
-                        layer: me.drawLayer,
-                        title: "Census Attribute: " + me.options.fieldName
-                    }]
-                }, $('#' + me.options.legendID)[0]);
-                legend.startup();
             }
         };
 
+        RangeMap.prototype.fresh = function(callback){
+        };
+
         return RangeMap;
-    });
+    }
+)
+;
