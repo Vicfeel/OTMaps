@@ -15,7 +15,8 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
                 fieldName: 'STAT_VALUE',
                 url: "",
                 statData: [],
-                dataTag: "",
+                baseTag: "",
+                statTag: [],
                 corString: []
             },
             popup: {
@@ -24,7 +25,8 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
                 content: "${STAT_VALUE}"
             },
             style: {
-                color: '#27ae60',
+                baseColor: '#27ae60',
+                statColor: '#c0392b',
                 classicMethod: 'quantile'
             },
             label: {

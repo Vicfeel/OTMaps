@@ -18,11 +18,10 @@ define(["app/tool/ThematicMaps/ThematicMap", "app/tool/ThematicMaps/Utils/ColorU
         RangeMap.prototype.draw = function (callback) {
             var me = this;
             var temp = [];
-            me._oconfig = temp.push(me.config).slice(0)[0];
             if (me.config.layer.simple)
-                DrawUtil.createSLayer.call(me, renderMap);
+                DrawUtil.createSLayer(me, renderMap);
             else
-                DrawUtil.createMLayer.call(me, renderMap);
+                DrawUtil.createMLayer(me, renderMap);
 
             function renderMap() {
                 var fieldName = me.config.layer.fieldName;
@@ -35,7 +34,7 @@ define(["app/tool/ThematicMaps/ThematicMap", "app/tool/ThematicMaps/Utils/ColorU
                     classificationMethod: styleConfig.classicMethod
                 }).then(function (response) {
                     var renderer = new ClassBreaksRenderer(null, fieldName);
-                    var colors = ColorUtil.getGradientColor('#ddd', styleConfig.color, response.classBreakInfos.length + 1);
+                    var colors = ColorUtil.getGradientColor('#ddd', styleConfig.baseColor, response.classBreakInfos.length + 1);
                     me._classBreakInfos = response.classBreakInfos;
                     response.classBreakInfos.forEach(function (v, i) {
                         var symbol = new SimpleFillSymbol();
@@ -46,16 +45,16 @@ define(["app/tool/ThematicMaps/ThematicMap", "app/tool/ThematicMaps/Utils/ColorU
 
                     me.drawLayer.setRenderer(renderer);
                     if (me.config.label.show)
-                        DrawUtil.createLabel.call(me, me.config.label);
+                        DrawUtil.createLabel(me, me.config.label);
                     if (me.config.legend.show)
-                        DrawUtil.createLegend.call(me, me.config.legend);
+                        DrawUtil.createLegend(me, me.config.legend);
                     me.drawLayer.redraw();
                     if (callback) callback();
                 });
             }
         };
 
-        RangeMap.prototype.fresh = function(callback){
+        RangeMap.prototype.fresh = function (callback) {
         };
 
         return RangeMap;

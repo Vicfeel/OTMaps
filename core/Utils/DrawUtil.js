@@ -12,8 +12,7 @@ define(["esri/Color", "esri/dijit/Legend", "esri/symbols/SimpleFillSymbol", "esr
         }
 
         //创建普通图层
-        DrawUtil.prototype.createSLayer = function (callback) {
-            var me = this;
+        DrawUtil.prototype.createSLayer = function (me, callback) {
             if (!me.draw || !me.clear) return false;
             var layerConfig = me.config.layer;
             //必要属性检查
@@ -40,13 +39,12 @@ define(["esri/Color", "esri/dijit/Legend", "esri/symbols/SimpleFillSymbol", "esr
         };
 
         //结合统计数据，创建制图图层
-        DrawUtil.prototype.createMLayer = function (callback) {
-            debugger;
-            var me = this;
+        DrawUtil.prototype.createMLayer = function (me, callback) {
+            var obj = this;
             if (!me.draw || !me.clear) return false;
             var layerConfig = me.config.layer;
             //必要属性检查
-            if (!me.map || !layerConfig.url || !layerConfig.corString || !layerConfig.dataTag)
+            if (!me.map || !layerConfig.url || !layerConfig.corString || !layerConfig.baseTag)
                 throw new Error('ThematicMap Error 1001：some required params absent in config,use [setConfig] to fix it');
 
             if (me.drawLayer) {
@@ -62,6 +60,7 @@ define(["esri/Color", "esri/dijit/Legend", "esri/symbols/SimpleFillSymbol", "esr
             query.outFields = ["*"];
             query.where = "1=1";
             layer.queryFeatures(query, function (data) {
+                me._features = data.features;
                 data.fields.push({
                     "name": layerConfig.fieldName,
                     "alias": "统计数据",
@@ -72,26 +71,9 @@ define(["esri/Color", "esri/dijit/Legend", "esri/symbols/SimpleFillSymbol", "esr
                     var attr = {};
                     for (var att in v.attributes)
                         attr[att] = v.attributes[att];
-                    for (var i = 0; i < layerConfig.statData.length; i++) {
-                        var checked = 0;
-                        layerConfig.corString.forEach(function (item) {
-                            var fd = item.substring(0, item.indexOf('='));
-                            var value = item.substring(item.indexOf('=') + 1);
-                            if (fd.indexOf('&') < 0) {
-                                if (layerConfig.statData[i][fd] == v.attributes[value])
-                                    checked++;
-                            }
-                            else {
-                                fd = fd.substring(1);
-                                if (layerConfig.statData[i][fd] == value)
-                                    checked++;
-                            }
-                        });
-                        if (checked == layerConfig.corString.length && checked != 0) {
-                            attr[layerConfig.fieldName] = parseFloat(layerConfig.statData[i][layerConfig.dataTag]);
-                            break;
-                        }
-                    }
+                    //获得对应数据
+                    if (!obj.getCorData(layerConfig.statData, v, layerConfig.corString, layerConfig.baseTag) === false)
+                        attr[layerConfig.fieldName] = obj.getCorData(layerConfig.statData, v, layerConfig.corString, layerConfig.baseTag);
                     var graphic = new Graphic(v.geometry);
                     graphic.setAttributes(attr);
                     features.push(graphic);
@@ -123,8 +105,7 @@ define(["esri/Color", "esri/dijit/Legend", "esri/symbols/SimpleFillSymbol", "esr
         };
 
         //创建标注
-        DrawUtil.prototype.createLabel = function (label) {
-            var me = this;
+        DrawUtil.prototype.createLabel = function (me, label) {
             if (!me.draw || !me.clear) return false;
             if (!label.field)
                 throw new Error('ThematicMap错误1003：未指定标注字段[labelField]!');
@@ -151,8 +132,7 @@ define(["esri/Color", "esri/dijit/Legend", "esri/symbols/SimpleFillSymbol", "esr
         };
 
         //创建图例
-        DrawUtil.prototype.createLegend = function (legend) {
-            var me = this;
+        DrawUtil.prototype.createLegend = function (me, legend) {
             if (!me.draw || !me.clear) return false;
             if (me.legend)
                 me.legend.destroy();
@@ -167,6 +147,30 @@ define(["esri/Color", "esri/dijit/Legend", "esri/symbols/SimpleFillSymbol", "esr
                 }]
             }, lgd);
             me.legend.startup();
+        };
+
+        //获取对应统计数据
+        DrawUtil.prototype.getCorData = function (statData, feature, corString, dataTag) {
+            for (var i = 0; i < statData.length; i++) {
+                var checked = 0;
+                corString.forEach(function (item) {
+                    var fd = item.substring(0, item.indexOf('='));
+                    var value = item.substring(item.indexOf('=') + 1);
+                    if (fd.indexOf('&') < 0) {
+                        if (statData[i][fd] == feature.attributes[value])
+                            checked++;
+                    }
+                    else {
+                        fd = fd.substring(1);
+                        if (statData[i][fd] == value)
+                            checked++;
+                    }
+                });
+                if (checked == corString.length && checked != 0) {
+                    return parseFloat(statData[i][dataTag]);
+                }
+            }
+            return false;
         };
 
         return new DrawUtil();
