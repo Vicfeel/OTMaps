@@ -6,45 +6,61 @@
  */
 
 define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
+    //默认配置
+    var defalutConfig = {
+        map: null,
+        layer: {
+            simple: true,
+            id: 'statUnits',
+            fieldName: 'STAT_VALUE',
+            url: "",
+            statData: [],
+            baseTag: "",
+            statTag: [],
+            corString: []
+        },
+        popup: {
+            show: false,
+            title: "值为",
+            content: "${}"
+        },
+        style: {
+            baseColor: '#27ae60',
+            statColor: '#c0392b',
+            classicMethod: 'quantile'
+        },
+        label: {
+            show: false,
+            field: 'NAME',
+            color: '#000',
+            size: 9,
+            family: 'Microsoft Yahei',
+            bold: false,
+            xoffset: 0,
+            yoffset: 0
+        },
+        legend: {
+            show: false,
+            id: 'legendDiv',
+            title: '图例名称'
+        }
+    };
+    //子类共享属性
+    var shareProp = {
+        map: null,
+        legend: null,
+        drawLayer: null
+    };
+
     function ThematicMap() {
-        this.config = {
-            map: null,
-            layer: {
-                simple: true,
-                id: 'statUnits',
-                fieldName: 'STAT_VALUE',
-                url: "",
-                statData: [],
-                baseTag: "",
-                statTag: [],
-                corString: []
-            },
-            popup: {
-                show: true,
-                title: "值为",
-                content: "${STAT_VALUE}"
-            },
-            style: {
-                baseColor: '#27ae60',
-                statColor: '#c0392b',
-                classicMethod: 'quantile'
-            },
-            label: {
-                show: false,
-                field: 'NAME',
-                size: 13
-            },
-            legend: {
-                show: false,
-                id: 'vlegend',
-                title: '耕地面积（平方千米)'
-            }
-        };
+        this.config = copyObj(defalutConfig);
+        this.shareProp = shareProp;
     }
 
     //参数配置
     ThematicMap.prototype.setConfig = function (options) {
         var me = this;
+        debugger;
         for (var obj in options) {
             if (obj == 'map')
                 me.config.map = options.map;
@@ -54,7 +70,7 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
                         me.config[obj][item] = options[obj][item];
                 }
         }
-        me.map = me.config.map;
+        me.map = me.shareProp.map = me.config.map;
         return me;
     };
     ThematicMap.prototype.setLayer = function (options) {
@@ -78,24 +94,43 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
         }
         return me;
     };
-
-    //绘制专题图
-    ThematicMap.prototype.draw = function (callback) {
+    //配置文件的备份与读取
+    ThematicMap.prototype.backupConfig = function (me) {
+        this._oconfig = copyObj(this.config);
+    };
+    ThematicMap.prototype.restoreConfig = function (me) {
+        this.oconfig = copyObj(this._oconfig);
     };
 
+    //专题图方法
+    ThematicMap.prototype.draw = function (callback) {
+    };
     ThematicMap.prototype.fresh = function (callback) {
 
     };
-
-    //清除专题图
     ThematicMap.prototype.clear = function () {
-        this.map.removeLayer(this.drawLayer);
-        if (this.legend) {
-            this.legend.destroy();
-            this.lenged = null;
-        }
+        debugger;
+        this.shareProp.drawLayer && this.shareProp.map.removeLayer(this.shareProp.drawLayer);
+        this.shareProp.drawLayer = null;
+        this.shareProp.legend && this.shareProp.legend.destroy();
+        this.shareProp.lenged = null;
+        this._binded && this._binded.remove();
+        this._binded = null;
         return this;
     };
+
+    //对象复制
+    function copyObj(source) {
+        var result = {};
+        for (var key in source) {
+            if (key === 'map') {
+                result[key] = source[key];
+                continue;
+            }
+            result[key] = typeof source[key] === 'object' ? copyObj(source[key]) : source[key];
+        }
+        return result;
+    }
 
     return ThematicMap;
 });
