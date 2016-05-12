@@ -4,7 +4,7 @@
  * @date 2016-05-08
  * @description 核心绘制组件
  */
-define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legend", "esri/symbols/TextSymbol", "esri/geometry/Polygon", "esri/geometry/Point",
+define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/components/Legend", "esri/symbols/TextSymbol", "esri/geometry/Polygon", "esri/geometry/Point",
         "esri/layers/LabelClass", "esri/symbols/Font", "esri/InfoTemplate", "esri/layers/FeatureLayer", "esri/tasks/query", "esri/graphic", "esri/geometry/Extent",
         "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/renderers/smartMapping", "esri/renderers/ClassBreaksRenderer"],
     function (ColorUtil, Color, Legend, TextSymbol, Polygon, Point,
@@ -13,6 +13,7 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
         function DrawUtil() {
         }
 
+        var diffField = "tagForDiffColor";
         /* 创建方法 */
         //创建普通图层
         DrawUtil.prototype.createSLayer = function (me, callback) {
@@ -24,9 +25,9 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
             if (typeof statTag === 'string')
                 statTag = [statTag];
             if (!me.map)
-                throw new Error('ThematicMap Error 1001：[map] is required in config,use [setConfig] method to fix it');
-            if (!layerConfig.statTag.length || !layerConfig.url)
-                throw new Error('ThematicMap Error 1002：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
+                throw new Error('OTMaps Error 1001：[map] is required in config,use [setConfig] method to fix it');
+            if ((!layerConfig.statTag.length && !layerConfig.baseTag) || !layerConfig.url)
+                throw new Error('OTMaps Error 1002：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
 
             var infoTemplate = me.config.popup.show ? new InfoTemplate(me.config.popup) : null;
             var layer = new FeatureLayer(layerConfig.url, {
@@ -38,7 +39,7 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
             query.where = "1=1";
             layer.queryFeatures(query, function (data) {
                 data.fields.push({
-                    "name": 'tagForDiffColor',
+                    "name": diffField,
                     "alias": "区分颜色",
                     "type": "esriFieldTypeDouble"
                 });
@@ -47,7 +48,7 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
                     var attr = {};
                     for (var att in v.attributes)
                         attr[att] = v.attributes[att];
-                    attr['tagForDiffColor'] = i;
+                    attr[diffField] = i;
                     var graphic = new Graphic(v.geometry);
                     graphic.setAttributes(attr);
                     features.push(graphic);
@@ -87,9 +88,9 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
             var layerConfig = me.config.layer;
             //必要属性检查
             if (!me.map)
-                throw new Error('ThematicMap Error 1001：[map] is required in config,use [setConfig] method to fix it');
+                throw new Error('OTMaps Error 1001：[map] is required in config,use [setConfig] method to fix it');
             if (!layerConfig.url || !layerConfig.corString.length || (!layerConfig.statTag.length && !layerConfig.baseTag))
-                throw new Error('ThematicMap Error 1002：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
+                throw new Error('OTMaps Error 1002：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
 
             var infoTemplate = me.config.popup.show ? new InfoTemplate(me.config.popup) : null;
             var layer = new FeatureLayer(layerConfig.url, {
@@ -101,6 +102,11 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
             query.where = "1=1";
             layer.queryFeatures(query, function (data) {
                 //添加字段
+                data.fields.push({
+                    "name": diffField,
+                    "alias": "区分颜色",
+                    "type": "esriFieldTypeDouble"
+                });
                 layerConfig.baseTag && data.fields.push({
                     "name": layerConfig.baseTag,
                     "alias": "底图统计数据",
@@ -115,8 +121,9 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
                 });
                 var features = [];
                 //添加数据
-                data.features.forEach(function (v) {
+                data.features.forEach(function (v, i) {
                     var attr = {};
+                    attr[diffField] = i;
                     for (var att in v.attributes)
                         attr[att] = v.attributes[att];
                     if (!obj.getCorData(layerConfig.statData, v, layerConfig.corString, layerConfig.baseTag) === false)
@@ -161,7 +168,7 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
             if (!me.draw || !me.clear) return false;
             var labelConfig = me.config.label;
             if (!labelConfig.field)
-                throw new Error('ThematicMap Error 1003：[field] is required in label config,use [setConfig] method to fix it');
+                throw new Error('OTMaps Error 1003：[field] is required in label config,use [setConfig] method to fix it');
             me._features.forEach(function (feature) {
                     var geometry = feature.geometry;
                     var center = geometry.getCentroid();
@@ -184,24 +191,22 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
             if (!me.draw || !me.clear) return false;
             var legendConfig = me.config.legend;
             if (!legendConfig.id)
-                throw new Error('ThematicMap Error 1004：[id] is required in label config,use [setConfig] method to fix it');
+                throw new Error('OTMaps Error 1004：[id] is required in label config,use [setConfig] method to fix it');
             if (me.shareProp.legend)
                 me.shareProp.legend.destroy();
-            var lgd = document.createElement('div');
-            lgd.id = legendConfig.id;
-            document.getElementById(me.map.id).appendChild(lgd);
+
             me.legend = me.shareProp.legend = new Legend({
                 map: me.map,
-                layerInfos: [{
-                    layer: me.drawLayer,
-                    title: legendConfig.title
-                }]
-            }, lgd);
+                id: legendConfig.id,
+                title: legendConfig.title,
+                info: me._legendInfo
+            });
+
             me.legend.startup();
         };
 
         /* 绘制方法 */
-        //绘制范围分级图
+        //绘制范围值
         DrawUtil.prototype.drawRange = function (me, callback) {
             var obj = this;
             var baseTag = me.config.layer.baseTag;
@@ -217,31 +222,32 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
                 var renderer = new ClassBreaksRenderer(null, baseTag);
                 var colors = ColorUtil.getGradientColor('#ddd', styleConfig.baseColor, response.classBreakInfos.length + 1);
                 me._classBreakInfos = response.classBreakInfos;
+                var legendItems = [];
                 response.classBreakInfos.forEach(function (v, i) {
+                    //构造图例
+                    legendItems.push({
+                        color: colors[i + 1],
+                        value: v.minValue + '-' + v.maxValue
+                    });
+
                     var symbol = new SimpleFillSymbol();
                     symbol.setColor(new Color(colors[i + 1]));
                     symbol.setOutline(new SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new Color([75, 75, 75, 0.8]), 1));
                     renderer.addBreak(v.minValue, v.maxValue, symbol);
                 });
+                me._legendInfo.push(legendItems);
                 me.drawLayer.setRenderer(renderer);
                 callback && callback();
             });
         };
-
+        //绘制唯一值
         DrawUtil.prototype.drawUnique = function (me, callback) {
             var obj = this;
-            var fieldName = 'OBJECTID';
-            for (var i = 0; i < me.drawLayer.fields.length; i++) {
-                if (me.drawLayer.fields[i].name.toUpperCase() == 'OBJECTID') {
-                    fieldName = me.drawLayer.fields[i].name;
-                    break;
-                }
-            }
             var styleConfig = me.config.style;
             //创建渲染
             smartMapping.createTypeRenderer({
                 layer: me.drawLayer,
-                field: fieldName,
+                field: diffField,
                 basemap: 'streets',
                 numTypes: -1
             }).then(function (response) {
@@ -249,17 +255,17 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
                 callback && callback();
             });
         };
-
+        //绘制柱状图
         DrawUtil.prototype.drawHistogram = function (me) {
             var obj = this;
+            debugger;
             var layerConfig = me.config.layer;
-            var chartWidth = 0.015;
-            var chartHeight = 0.07;
+            var chartHeight = (me._features[0]._extent.ymax - me._features[0]._extent.ymin) / 3 * 2;
+            var chartWidth = chartHeight / 5;
             var maxStatValue = getMaxValue();
             var colors = ColorUtil.getGradientColor(me.config.style.statColor, '#ddd', layerConfig.statTag.length + 1).slice(0, layerConfig.statTag.length);
             me._features.forEach(function (feature) {
                 for (var i = 0; i < layerConfig.statTag.length; i++) {
-                    debugger;
                     var geometry = feature.geometry;
                     var center = geometry.getCentroid();
                     var xStart = center.x - (chartWidth * layerConfig.statTag.length) / 2;
@@ -270,14 +276,14 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
                     var yEnd = center.y + chartHeight * statData / maxStatValue;
                     var extent = new Extent(x, yStart, xEnd, yEnd, feature.spatialReference);
                     var symbol = new SimpleFillSymbol().setColor(colors[i]);
-                    symbol.outline.setWidth(0);
+                    symbol.setOutline(new SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new Color([75, 75, 75, 0.5]), 0.5));
                     me.drawLayer.add(new Graphic(extent, symbol));
                 }
             });
+            saveLegend();
 
-
+            //获取最大值
             function getMaxValue() {
-                //var minValue = Infinity, maxValue = -Infinity;
                 var data = [];
                 me._features.forEach(function (feature) {
                     for (var i = 0; i < layerConfig.statTag.length; i++) {
@@ -288,6 +294,151 @@ define(["app/tool/ThematicMaps/Utils/ColorUtil", "esri/Color", "esri/dijit/Legen
                     return a - b
                 });
                 return data[data.length - 1];
+            }
+
+            //存储图例信息
+            function saveLegend() {
+                var legendItems = [];
+                layerConfig.statTag.forEach(function (tag, i) {
+                    legendItems.push({
+                        color: colors[i],
+                        value: tag
+                    })
+                });
+                me._legendInfo.push(legendItems);
+            }
+        }
+        //绘制饼状图
+        DrawUtil.prototype.drawPie = function (me) {
+            var obj = this;
+            debugger;
+            var layerConfig = me.config.layer;
+            var chartWidth = 0.015;
+            var colors = ColorUtil.getGradientColor(me.config.style.statColor, '#ddd', layerConfig.statTag.length + 1).slice(0, layerConfig.statTag.length);
+            me._features.forEach(function (feature) {
+                var geometry = feature.geometry;
+                var center = geometry.getCentroid();
+                var totalValue = 0, startDegree = 0, endDegree = 0;
+                //计算总和
+                layerConfig.statTag.forEach(function (tag) {
+                    totalValue += feature.attributes[tag];
+                });
+                layerConfig.statTag.forEach(function (tag, i) {
+                    var curValue = feature.attributes[tag];
+                    endDegree = startDegree + Math.PI * 2 * curValue / totalValue;
+                    var rings = [];
+                    var symbol = new SimpleFillSymbol().setColor(colors[i]);
+                    symbol.setOutline(new SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new Color([60, 60, 60, 0.6]), 1));
+
+                    rings.push([center.x, center.y]);
+                    getRings(center, rings, startDegree, endDegree);
+                    rings.push([center.x, center.y]);
+                    var polygon = new Polygon(rings);
+                    me.drawLayer.add(new Graphic(polygon, symbol));
+                    startDegree = endDegree;
+                });
+            });
+            saveLegend();
+
+            //存储图例信息
+            function saveLegend() {
+                var legendItems = [];
+                layerConfig.statTag.forEach(function (tag, i) {
+                    legendItems.push({
+                        color: colors[i],
+                        value: tag
+                    })
+                });
+                me._legendInfo.push(legendItems);
+            }
+
+            function getRingsForHalf(center, rings, startDegree, endDegree) {
+                var maxDecimal = 0.000001;
+                var num = 50;
+                var centerX = center.x;
+                var centerY = center.y;
+                var r = (me._features[0]._extent.ymax - me._features[0]._extent.ymin) / 4;
+
+                if (startDegree < Math.PI / 2 && endDegree <= Math.PI / 2) {
+                    var xSizeBegin = centerX + Math.cos(endDegree) * r;
+                    var xSizeEnd = centerX + Math.cos(startDegree) * r;
+                    var xSize = xSizeEnd - xSizeBegin;
+                    for (var i = num - 1; i >= 0; --i) {
+                        var x = xSizeBegin + xSize * (i * 1.0 / (num - 1));
+                        var square = r * r - (x - centerX) * (x - centerX);
+                        var y = centerY + Math.sqrt(square < 0.0 ? 0.0 : square);
+                        rings[rings.length] = [x, y];
+                    }
+                }
+                else if (startDegree >= Math.PI / 2 && endDegree <= Math.PI) {
+                    var xSizeBegin = centerX + Math.cos(endDegree) * r;
+                    var xSizeEnd = centerX + Math.cos(startDegree) * r;
+                    var xSize = xSizeEnd - xSizeBegin;
+                    for (var i = num - 1; i >= 0; --i) {
+                        var x = xSizeBegin + xSize * (i * 1.0 / (num - 1));
+                        var square = r * r - (x - centerX) * (x - centerX);
+                        var y = centerY + Math.sqrt(square < 0.0 ? 0.0 : square);
+                        rings[rings.length] = [x, y];
+                    }
+                }
+                else if (startDegree >= Math.PI && endDegree <= Math.PI * 3 / 2) {
+                    var xSizeBegin = centerX + Math.cos(endDegree) * r;
+                    var xSizeEnd = centerX + Math.cos(startDegree) * r;
+                    var xSize = xSizeEnd - xSizeBegin;
+                    for (var i = num - 1; i >= 0; --i) {
+                        var x = xSizeBegin + xSize * (i * 1.0 / (num - 1));
+                        var square = r * r - (x - centerX) * (x - centerX);
+                        var y = centerY - Math.sqrt(square < 0.0 ? 0.0 : square);
+                        rings[rings.length] = [x, y];
+                    }
+                }
+                else if (startDegree >= (Math.PI * 3 / 2 - maxDecimal) && endDegree <= (Math.PI * 2 + maxDecimal)) {
+                    var xSizeBegin = centerX + Math.cos(endDegree) * r;
+                    var xSizeEnd = centerX + Math.cos(startDegree) * r;
+                    var xSize = xSizeEnd - xSizeBegin;
+                    for (var i = num - 1; i >= 0; --i) {
+                        var x = xSizeBegin + xSize * (i * 1.0 / (num - 1));
+                        var square = r * r - (x - centerX) * (x - centerX);
+                        var y = centerY - Math.sqrt(square < 0.0 ? 0.0 : square);
+                        rings[rings.length] = [x, y];
+                    }
+                }
+
+            }
+
+            function getRings(center, rings, startDegree, endDegree) {
+                if (startDegree < Math.PI / 2 && endDegree > Math.PI / 2 && endDegree <= Math.PI) {
+                    getRingsForHalf(center, rings, startDegree, Math.PI / 2);
+                    getRingsForHalf(center, rings, Math.PI / 2, endDegree);
+                }
+                else if (startDegree < Math.PI / 2 && endDegree > Math.PI && endDegree <= Math.PI * 3 / 2) {
+                    getRingsForHalf(center, rings, startDegree, Math.PI / 2);
+                    getRingsForHalf(center, rings, Math.PI / 2, Math.PI);
+                    getRingsForHalf(center, rings, Math.PI, endDegree);
+
+                }
+                else if (startDegree < Math.PI / 2 && endDegree > Math.PI * 3 / 2 && endDegree <= Math.PI * 2) {
+                    getRingsForHalf(center, rings, startDegree, Math.PI / 2);
+                    getRingsForHalf(center, rings, Math.PI / 2, Math.PI);
+                    getRingsForHalf(center, rings, Math.PI, Math.PI * 3 / 2);
+                    getRingsForHalf(center, rings, Math.PI * 3 / 2, endDegree);
+
+                }
+                else if (startDegree >= Math.PI / 2 && startDegree < Math.PI && endDegree > Math.PI && endDegree <= Math.PI * 3 / 2) {
+                    getRingsForHalf(center, rings, startDegree, Math.PI);
+                    getRingsForHalf(center, rings, Math.PI, endDegree);
+                }
+                else if (startDegree >= Math.PI / 2 && startDegree < Math.PI && endDegree > Math.PI * 3 / 2) {
+                    getRingsForHalf(center, rings, startDegree, Math.PI);
+                    getRingsForHalf(center, rings, Math.PI, Math.PI * 3 / 2);
+                    getRingsForHalf(center, rings, Math.PI * 3 / 2, endDegree);
+                }
+                else if (startDegree >= Math.PI && startDegree < Math.PI * 3 / 2 && endDegree > Math.PI * 3 / 2) {
+                    getRingsForHalf(center, rings, startDegree, Math.PI * 3 / 2);
+                    getRingsForHalf(center, rings, Math.PI * 3 / 2, endDegree);
+                } else {
+                    getRingsForHalf(center, rings, startDegree, endDegree);
+                }
             }
         }
 

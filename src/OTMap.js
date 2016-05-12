@@ -5,7 +5,7 @@
  * @description 专题图父类
  */
 
-define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
+define(["app/tool/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
     //默认配置
     var defalutConfig = {
         map: null,
@@ -52,15 +52,15 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
         drawLayer: null
     };
 
-    function ThematicMap() {
+    function OTMap() {
         this.config = copyObj(defalutConfig);
         this.shareProp = shareProp;
+        this._legendInfo = [];
     }
 
     //参数配置
-    ThematicMap.prototype.setConfig = function (options) {
+    OTMap.prototype.setConfig = function (options) {
         var me = this;
-        debugger;
         for (var obj in options) {
             if (obj == 'map')
                 me.config.map = options.map;
@@ -73,7 +73,7 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
         me.map = me.shareProp.map = me.config.map;
         return me;
     };
-    ThematicMap.prototype.setLayer = function (options) {
+    OTMap.prototype.setLayer = function (options) {
         var me = this;
         for (var item in options) {
             if (options.hasOwnProperty(item))
@@ -81,12 +81,12 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
         }
         return me;
     };
-    ThematicMap.prototype.setStatData = function (data) {
+    OTMap.prototype.setStatData = function (data) {
         var me = this;
         me.config.layer.statData = data;
         return me;
     };
-    ThematicMap.prototype.setStyle = function (options) {
+    OTMap.prototype.setStyle = function (options) {
         var me = this;
         for (var item in options) {
             if (options.hasOwnProperty(item))
@@ -95,27 +95,30 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
         return me;
     };
     //配置文件的备份与读取
-    ThematicMap.prototype.backupConfig = function (me) {
+    OTMap.prototype.backupConfig = function (me) {
         this._oconfig = copyObj(this.config);
     };
-    ThematicMap.prototype.restoreConfig = function (me) {
+    OTMap.prototype.restoreConfig = function (me) {
         this.oconfig = copyObj(this._oconfig);
     };
 
     //专题图方法
-    ThematicMap.prototype.draw = function (callback) {
+    OTMap.prototype.draw = function (callback) {
     };
-    ThematicMap.prototype.fresh = function (callback) {
+    OTMap.prototype.fresh = function (callback) {
 
     };
-    ThematicMap.prototype.clear = function () {
-        debugger;
+    OTMap.prototype.clear = function () {
         this.shareProp.drawLayer && this.shareProp.map.removeLayer(this.shareProp.drawLayer);
         this.shareProp.drawLayer = null;
+
         this.shareProp.legend && this.shareProp.legend.destroy();
         this.shareProp.lenged = null;
+        this._legendInfo = [];
+
         this._binded && this._binded.remove();
         this._binded = null;
+
         return this;
     };
 
@@ -132,5 +135,5 @@ define(["app/tool/ThematicMaps/Utils/DrawUtil"], function (DrawUtil) {
         return result;
     }
 
-    return ThematicMap;
+    return OTMap;
 });

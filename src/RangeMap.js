@@ -6,14 +6,14 @@
  */
 
 
-define(["app/tool/ThematicMaps/ThematicMap", "app/tool/ThematicMaps/Utils/DrawUtil"],
-    function (ThematicMap, DrawUtil) {
+define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
+    function (OTMap, DrawUtil) {
         function RangeMap(options, callback) {
-            ThematicMap.apply(this, arguments);
+            OTMap.apply(this, arguments);
             this.type = 'Range';
         }
 
-        RangeMap.prototype = new ThematicMap();
+        RangeMap.prototype = new OTMap();
 
         RangeMap.prototype.draw = function (callback) {
             var me = this;

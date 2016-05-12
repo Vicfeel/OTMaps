@@ -2,14 +2,14 @@
  * @author 张伟佩
  * @version 1.0
  * @date 2016-05-10
- * @description 柱状专题图
+ * @description 柱状图专题图
  */
 
 
-define(["app/tool/ThematicMaps/ThematicMap", "app/tool/ThematicMaps/Utils/DrawUtil"],
-    function (ThematicMap, DrawUtil) {
+define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
+    function (OTMap, DrawUtil) {
         function HistogramMap(options, callback) {
-            ThematicMap.apply(this, arguments);
+            OTMap.apply(this, arguments);
             this.type = "Histogram";
             this.setConfig({
                 label: {
@@ -19,7 +19,7 @@ define(["app/tool/ThematicMaps/ThematicMap", "app/tool/ThematicMaps/Utils/DrawUt
             });
         }
 
-        HistogramMap.prototype = new ThematicMap();
+        HistogramMap.prototype = new OTMap();
 
         HistogramMap.prototype.draw = function (callback) {
             var me = this;
