@@ -38,6 +38,7 @@ OTMaps
     ... ...
   });
   ```
+  [详细开发API](https://github.com/Vicfeel/OTMaps/blob/master/APIDoc.md)
 * **专题图绘制:**
 
   ```js
