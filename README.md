@@ -1,29 +1,46 @@
-# ThematicMaps
-基于ArcGIS JS API封装的专题图制图类库
-【使用方法简单】 【制图种类丰富】 【可结合ajax获取统计值动态绘制】
+OTMaps
+====
+基于`ArcGIS API For Javascript`封装的专题图制图类库，要求版本`3.13+`
 
-##使用方法（Usage）
-——以范围值统计图为例
-* **引用组件:**
+##类库特点(Advantage)
+
+* **使用方法简单:**
+
+  三步完成专题图绘制，[使用方法](#使用方法(Usage))
+* **制图种类丰富:**
+
+  当前支持`柱状图专题图``饼状图专题图``范围值专题图``热力专题图`以及`柱状+范围值组合图``饼状+范围值组合图`,并不断丰富中
+* **支持独立统计数据:**
+
+  统计数据不依赖地图服务，支持基于`独立统计数据`的专题图开发
+
+##使用方法(Usage)
+
+——以柱状图专题图为例
+* **引用及构建对象:**
 ```js
-define(["core/RangeMap"],function (RangeMap) { });
-```
-* **初始化对象:**
-```js
-var rangeMap = new RangeMap();
+define(["core/HistogramMap"],function (HistogramMap) {
+   var histogramMap = new HistogramMap();
+});
 ```
 * **制图参数设置:**
 ```js
-rangeMap.setConfig({
+histogramMap.setConfig({
   map: myMap,
   layer: {}
   ... ...
 });
 ```
-* **绘制与清除:**
+* **专题图绘制:**
 ```js
-rangeMap.draw();
-rangeMap.clear();
+histogramMap.draw();
 ```
-##接口说明（API）
-持续更新中...
+## 问题反馈(Questions)
+
+如何有任何疑问或更好的建议，请通过 [New Issue](https://github.com/Vicfeel/OTMaps/issues/new)来向我反馈。
+
+
+## 项目许可(License)
+
+OTMaps is available under the terms of the [MIT License](https://github.com/Vicfeel/OTMaps/blob/master/LICENSE.md).
+
