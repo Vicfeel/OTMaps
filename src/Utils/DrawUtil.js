@@ -6,27 +6,28 @@
  */
 define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/components/Legend", "esri/symbols/TextSymbol", "esri/geometry/Polygon", "esri/geometry/Point",
         "esri/layers/LabelClass", "esri/symbols/Font", "esri/InfoTemplate", "esri/layers/FeatureLayer", "esri/tasks/query", "esri/graphic", "esri/geometry/Extent",
-        "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/renderers/smartMapping", "esri/renderers/ClassBreaksRenderer"],
+        "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleMarkerSymbol",
+        "esri/renderers/smartMapping", "esri/renderers/ClassBreaksRenderer", "esri/renderers/HeatmapRenderer"],
     function (ColorUtil, Color, Legend, TextSymbol, Polygon, Point,
               LabelClass, Font, InfoTemplate, FeatureLayer, Query, Graphic, Extent,
-              SimpleFillSymbol, SimpleLineSymbol, smartMapping, ClassBreaksRenderer) {
+              SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol,
+              smartMapping, ClassBreaksRenderer, HeatmapRenderer) {
         function DrawUtil() {
         }
 
         var diffField = "tagForDiffColor";
         /* 创建方法 */
-        //创建普通图层
+        //创建普通统计图层
         DrawUtil.prototype.createSLayer = function (me, callback) {
             var obj = this;
             if (!me.draw || !me.clear) return false;
             var layerConfig = me.config.layer;
             //必要属性检查
-            var statTag = me.config.layer.statTag;
-            if (typeof statTag === 'string')
-                statTag = [statTag];
+            if (typeof me.config.layer.statTag === 'string')
+                me.config.layer.statTag = [me.config.layer.statTag];
             if (!me.map)
                 throw new Error('OTMaps Error 1001：[map] is required in config,use [setConfig] method to fix it');
-            if ((!layerConfig.statTag.length && !layerConfig.baseTag) || !layerConfig.url)
+            if ((!layerConfig.statTag.length && !layerConfig.baseTag && me.type != 'Heat') || !layerConfig.url)
                 throw new Error('OTMaps Error 1002：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
 
             var infoTemplate = me.config.popup.show ? new InfoTemplate(me.config.popup) : null;
@@ -81,17 +82,18 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
             });
         };
 
-        //结合统计数据，创建制图图层
+        //结合统计数据，创建统计图层
         DrawUtil.prototype.createMLayer = function (me, callback) {
             var obj = this;
             if (!me.draw || !me.clear) return false;
             var layerConfig = me.config.layer;
             //必要属性检查
+            if (typeof me.config.layer.statTag === 'string')
+                me.config.layer.statTag = [me.config.layer.statTag];
             if (!me.map)
                 throw new Error('OTMaps Error 1001：[map] is required in config,use [setConfig] method to fix it');
             if (!layerConfig.url || !layerConfig.corString.length || (!layerConfig.statTag.length && !layerConfig.baseTag))
                 throw new Error('OTMaps Error 1002：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
-
             var infoTemplate = me.config.popup.show ? new InfoTemplate(me.config.popup) : null;
             var layer = new FeatureLayer(layerConfig.url, {
                 "mode": FeatureLayer.MODE_SNAPSHOT,
@@ -258,7 +260,6 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
         //绘制柱状图
         DrawUtil.prototype.drawHistogram = function (me) {
             var obj = this;
-            debugger;
             var layerConfig = me.config.layer;
             var chartHeight = (me._features[0]._extent.ymax - me._features[0]._extent.ymin) / 3 * 2;
             var chartWidth = chartHeight / 5;
@@ -307,11 +308,10 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                 });
                 me._legendInfo.push(legendItems);
             }
-        }
+        };
         //绘制饼状图
         DrawUtil.prototype.drawPie = function (me) {
             var obj = this;
-            debugger;
             var layerConfig = me.config.layer;
             var chartWidth = 0.015;
             var colors = ColorUtil.getGradientColor(me.config.style.statColor, '#ddd', layerConfig.statTag.length + 1).slice(0, layerConfig.statTag.length);
@@ -440,7 +440,20 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                     getRingsForHalf(center, rings, startDegree, endDegree);
                 }
             }
-        }
+        };
+        //绘制热力图
+        DrawUtil.prototype.drawHeat = function (me) {
+            var obj = this;
+            debugger;
+            var colorStops = Array.prototype.slice.call(me.config.style.colorStops, 0);
+            var heatmapRenderer = new HeatmapRenderer({
+                colorStops: colorStops,
+                blurRadius: me.config.style.heatPower,
+                maxPixelIntensity: 150,
+                minPixelIntensity: 0
+            });
+            me.drawLayer.setRenderer(heatmapRenderer);
+        };
 
         /* 辅助方法 */
         //获取对应统计数据

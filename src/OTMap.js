@@ -27,7 +27,14 @@ define(["app/tool/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
         style: {
             baseColor: '#27ae60',
             statColor: '#c0392b',
-            classicMethod: 'quantile'
+            classicMethod: 'quantile',
+            colorStops: [
+                {ratio: 0, color: "rgba(39, 174, 96, 0)"},
+                {ratio: 0.2, color: "#27AE60"},
+                {ratio: 0.3, color: "#f39c12"},
+                {ratio: 0.85, color: "#d35400"},
+                {ratio: 0.95, color: "#c0392b"}],
+            heatPower: 15
         },
         label: {
             show: false,
@@ -125,14 +132,20 @@ define(["app/tool/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
     //对象复制
     function copyObj(source) {
         var result = {};
-        for (var key in source) {
-            if (key === 'map') {
-                result[key] = source[key];
-                continue;
+        if (isArray(source)) result = source.slice(0);
+        else
+            for (var key in source) {
+                if (key === 'map') {
+                    result[key] = source[key];
+                    continue;
+                }
+                result[key] = typeof source[key] === 'object' ? copyObj(source[key]) : source[key];
             }
-            result[key] = typeof source[key] === 'object' ? copyObj(source[key]) : source[key];
-        }
         return result;
+    }
+
+    function isArray(obj) {
+        return Object.prototype.toString.call(obj) === '[object Array]'
     }
 
     return OTMap;
