@@ -13,34 +13,43 @@ OTMaps
 * **支持独立统计数据:**
 
   统计数据不依赖地图服务，支持基于`独立统计数据`的专题图开发
+* **支持链式调用:**
+
+  ```js
+  histogramMap.setConfig(options).setStatData(data).draw(callback);
+  ```
 
 ##使用方法(Usage)
 
 ——以柱状图专题图为例
 * **引用及构建对象:**
-```js
-define(["core/HistogramMap"],function (HistogramMap) {
-   var histogramMap = new HistogramMap();
-});
-```
+
+  ```js
+  define(["core/HistogramMap"],function (HistogramMap) {
+    var histogramMap = new HistogramMap();
+  });
+  ```
 * **制图参数设置:**
-```js
-histogramMap.setConfig({
-  map: myMap,
-  layer: {}
-  ... ...
-});
-```
+
+  ```js
+  histogramMap.setConfig({
+    map: myMap,
+    layer: {}
+    ... ...
+  });
+  ```
 * **专题图绘制:**
-```js
-histogramMap.draw();
-```
+
+  ```js
+  histogramMap.draw();
+ ```
+
 ## 问题反馈(Questions)
 
-如何有任何疑问或更好的建议，请通过 [New Issue](https://github.com/Vicfeel/OTMaps/issues/new)来向我反馈。
+  如何有任何疑问或更好的建议，请通过 [New Issue](https://github.com/Vicfeel/OTMaps/issues/new)来向我反馈。
 
 
 ## 项目许可(License)
 
-OTMaps is available under the terms of the [MIT License](https://github.com/Vicfeel/OTMaps/blob/master/LICENSE.md).
+  OTMaps is available under the terms of the [MIT License](https://github.com/Vicfeel/OTMaps/blob/master/LICENSE.md).
 
