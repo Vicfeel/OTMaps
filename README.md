@@ -38,7 +38,7 @@ OTMaps
     ... ...
   });
   ```
-  [详细开发API](https://github.com/Vicfeel/OTMaps/blob/master/APIDoc.md)
+  [详细开发API](https://github.com/Vicfeel/OTMaps/blob/master/APIDOC.md)
 * **专题图绘制:**
 
   ```js
@@ -47,7 +47,7 @@ OTMaps
 
 ## 问题反馈(Questions)
 
-  如何有任何疑问或更好的建议，请通过 [New Issue](https://github.com/Vicfeel/OTMaps/issues/new)来向我反馈。
+  如何有任何疑问或更好的建议，请通过 [New Issue](https://github.com/Vicfeel/OTMaps/issues/new) 来向我反馈。
 
 
 ## 项目许可(License)
