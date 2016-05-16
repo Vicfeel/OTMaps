@@ -18,6 +18,7 @@ define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
         RangeMap.prototype.draw = function (callback) {
             var me = this;
             me.clear();
+            DrawUtil.checkParams(me);
             me.config.layer.simple ? DrawUtil.createSLayer(me, renderMap) : DrawUtil.createMLayer(me, renderMap);
             function renderMap() {
                 DrawUtil.drawRange(me, function () {

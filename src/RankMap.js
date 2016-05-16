@@ -10,7 +10,7 @@ define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
         function HeatMap(options, callback) {
             OTMap.apply(this, arguments);
-            this.type = "Heat";
+            this.type = "Rank";
         }
 
         HeatMap.prototype = new OTMap();

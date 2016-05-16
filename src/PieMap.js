@@ -24,6 +24,7 @@ define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
         PieMap.prototype.draw = function (callback) {
             var me = this;
             me.clear();
+            DrawUtil.checkParams(me);
             me.config.layer.simple ? DrawUtil.createSLayer(me, renderBase) : DrawUtil.createMLayer(me, renderBase);
 
             function renderBase() {

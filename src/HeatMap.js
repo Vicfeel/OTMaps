@@ -5,7 +5,6 @@
  * @description 热力专题图
  */
 
-
 define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
         function HeatMap(options, callback) {
@@ -18,7 +17,7 @@ define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
         HeatMap.prototype.draw = function (callback) {
             var me = this;
             me.clear();
-            DrawUtil.createSLayer(me, function () {
+            DrawUtil.checkParams(me).createSLayer(me, function () {
                 DrawUtil.drawHeat(me);
                 me.drawLayer.redraw();
                 me.backupConfig();

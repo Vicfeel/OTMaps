@@ -21,15 +21,8 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
         DrawUtil.prototype.createSLayer = function (me, callback) {
             var obj = this;
             if (!me.draw || !me.clear) return false;
-            var layerConfig = me.config.layer;
-            //必要属性检查
-            if (typeof me.config.layer.statTag === 'string')
-                me.config.layer.statTag = [me.config.layer.statTag];
-            if (!me.map)
-                throw new Error('OTMaps Error 1001：[map] is required in config,use [setConfig] method to fix it');
-            if ((!layerConfig.statTag.length && !layerConfig.baseTag && me.type != 'Heat') || !layerConfig.url)
-                throw new Error('OTMaps Error 1002：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
 
+            var layerConfig = me.config.layer;
             var infoTemplate = me.config.popup.show ? new InfoTemplate(me.config.popup) : null;
             var layer = new FeatureLayer(layerConfig.url, {
                 "mode": FeatureLayer.MODE_SNAPSHOT,
@@ -80,8 +73,8 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                 });
                 me.map.addLayers([me.drawLayer]);
             });
+            return obj;
         };
-
         //结合统计数据，创建统计图层
         DrawUtil.prototype.createMLayer = function (me, callback) {
             var obj = this;
@@ -90,10 +83,6 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
             //必要属性检查
             if (typeof me.config.layer.statTag === 'string')
                 me.config.layer.statTag = [me.config.layer.statTag];
-            if (!me.map)
-                throw new Error('OTMaps Error 1001：[map] is required in config,use [setConfig] method to fix it');
-            if (!layerConfig.url || !layerConfig.corString.length || (!layerConfig.statTag.length && !layerConfig.baseTag))
-                throw new Error('OTMaps Error 1002：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
             var infoTemplate = me.config.popup.show ? new InfoTemplate(me.config.popup) : null;
             var layer = new FeatureLayer(layerConfig.url, {
                 "mode": FeatureLayer.MODE_SNAPSHOT,
@@ -163,14 +152,13 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                 });
                 me.map.addLayers([me.drawLayer]);
             });
+            return obj;
         };
-
         //创建标注
         DrawUtil.prototype.createLabel = function (me) {
+            var obj = this;
             if (!me.draw || !me.clear) return false;
             var labelConfig = me.config.label;
-            if (!labelConfig.field)
-                throw new Error('OTMaps Error 1003：[field] is required in label config,use [setConfig] method to fix it');
             me._features.forEach(function (feature) {
                     var geometry = feature.geometry;
                     var center = geometry.getCentroid();
@@ -186,14 +174,13 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                     me.drawLayer.add(new Graphic(point, statesLabel));
                 }
             );
+            return obj;
         };
-
         //创建图例
         DrawUtil.prototype.createLegend = function (me) {
+            var obj = this;
             if (!me.draw || !me.clear) return false;
             var legendConfig = me.config.legend;
-            if (!legendConfig.id)
-                throw new Error('OTMaps Error 1004：[id] is required in label config,use [setConfig] method to fix it');
             if (me.shareProp.legend)
                 me.shareProp.legend.destroy();
 
@@ -205,6 +192,7 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
             });
 
             me.legend.startup();
+            return obj;
         };
 
         /* 绘制方法 */
@@ -241,6 +229,7 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                 me.drawLayer.setRenderer(renderer);
                 callback && callback();
             });
+            return obj;
         };
         //绘制唯一值
         DrawUtil.prototype.drawUnique = function (me, callback) {
@@ -256,6 +245,7 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                 me.drawLayer.setRenderer(response.renderer);
                 callback && callback();
             });
+            return obj;
         };
         //绘制柱状图
         DrawUtil.prototype.drawHistogram = function (me) {
@@ -308,6 +298,8 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                 });
                 me._legendInfo.push(legendItems);
             }
+
+            return obj;
         };
         //绘制饼状图
         DrawUtil.prototype.drawPie = function (me) {
@@ -440,6 +432,8 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                     getRingsForHalf(center, rings, startDegree, endDegree);
                 }
             }
+
+            return obj;
         };
         //绘制热力图
         DrawUtil.prototype.drawHeat = function (me) {
@@ -453,9 +447,54 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                 minPixelIntensity: 0
             });
             me.drawLayer.setRenderer(heatmapRenderer);
+            return obj;
         };
 
         /* 辅助方法 */
+        DrawUtil.prototype.checkParams = function (me) {
+            var obj = this;
+            var layerConfig = me.config.layer;
+            var legendConfig = me.config.legend;
+            var labelConfig = me.config.label;
+            if (!me.map)
+                throw new Error('OTMaps Error：[map] is required in config,use [setConfig] method to fix it');
+            if (!layerConfig.url)
+                throw new Error('OTMaps Error：[url] is required in layer config,use [setConfig] or [setLayer] method to fix it');
+            if (legendConfig.show && !legendConfig.id)
+                throw new Error('OTMaps Error：[id] is required in label config,use [setConfig] method to fix it');
+            if (labelConfig.show && !labelConfig.field)
+                throw new Error('OTMaps Error：[field] is required in label config,use [setConfig] method to fix it');
+
+            switch (me.type) {
+                case 'Range' :
+                {
+                    //if (layer.geometryType === "esriGeometryPolygon")
+                    //    throw new Error("OTMaps Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
+                    if (!layerConfig.baseTag)
+                        throw new Error('OTMaps Error：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
+                    break;
+                }
+                case 'Histogram':
+                case 'Pie':
+                {
+                    //if (layer.geometryType === "esriGeometryPolygon")
+                    //    throw new Error("OTMaps Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
+                    if (!layerConfig.statTag.length)
+                        throw new Error('OTMaps Error：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
+                    if (!me.config.layer.simple && !layerConfig.corString.length)
+                        throw new Error('OTMaps Error：if [simple] is false,[corString] is required,use [setConfig] or [setLayer] method to fix it');
+                    break;
+                }
+                case 'Heat' :
+                {
+                    //if (layer.geometryType === "esriGeometryPoint")
+                    //    throw new Error("OTMaps Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
+                    break;
+                }
+            }
+
+            return obj;
+        };
         //获取对应统计数据
         DrawUtil.prototype.getCorData = function (statData, feature, corString, dataTag) {
             for (var i = 0; i < statData.length; i++) {
