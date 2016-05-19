@@ -5,7 +5,7 @@
  * @description 专题图父类
  */
 
-define(["app/tool/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
+define(["lib/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
     //默认配置
     var defalutConfig = {
         map: null,
@@ -49,6 +49,7 @@ define(["app/tool/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
         legend: {
             show: false,
             id: 'legendDiv',
+            itemTitle: [],
             title: '图例名称'
         }
     };
@@ -56,7 +57,8 @@ define(["app/tool/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
     var shareProp = {
         map: null,
         legend: null,
-        drawLayer: null
+        drawLayer: null,
+        _binded: null
     };
 
     function OTMap() {
@@ -123,8 +125,8 @@ define(["app/tool/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
         this.shareProp.lenged = null;
         this._legendInfo = [];
 
-        this._binded && this._binded.remove();
-        this._binded = null;
+        this.shareProp._binded && this.shareProp._binded.remove();
+        this.shareProp._binded = null;
 
         return this;
     };

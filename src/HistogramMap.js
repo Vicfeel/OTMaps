@@ -6,7 +6,7 @@
  */
 
 
-define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
+define(["lib/OTMaps/OTMap", "lib/OTMaps/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
         function HistogramMap(options, callback) {
             OTMap.apply(this, arguments);
@@ -28,7 +28,7 @@ define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
             me.config.layer.simple ? DrawUtil.createSLayer(me, renderBase) : DrawUtil.createMLayer(me, renderBase);
 
             function renderBase() {
-                me.config.layer.baseTag ? DrawUtil.drawRange(me, renderDijit) : DrawUtil.drawUnique(me, renderDijit);
+                me.config.layer.baseTag && me.config.layer.baseTag.length > 0 ? DrawUtil.drawRange(me, renderDijit) : DrawUtil.drawUnique(me, renderDijit);
             }
 
             function renderDijit() {

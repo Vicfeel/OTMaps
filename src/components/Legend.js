@@ -22,6 +22,7 @@ define(["esri/dijit/Legend"], function (esriLegend) {
         //创建dom
         var lgdDom = document.getElementById(me.id) ? document.getElementById(me.id) : document.createElement('div');
         lgdDom.id = me.id;
+        lgdDom.style.cssText = "position: absolute !important;width: 250px;bottom: 20px;right: 10px;z-index: 1;";
         _content.forEach(function (legendInfo, i) {
             var titleDom = document.createElement('div');
             titleDom.className = 'legendTitle';
@@ -46,15 +47,19 @@ define(["esri/dijit/Legend"], function (esriLegend) {
             lgdDom.appendChild(listDom);
         });
 
-        document.getElementById(me.map.id).appendChild(lgdDom);
+        var mapDom = document.getElementById(me.map.id) || document.getElementById(me.map.id + "_root");
+        mapDom.appendChild(lgdDom);
     };
 
     //销毁图例
     Legend.prototype.destroy = function () {
         var me = this;
         var lgdDom = document.getElementById(me.id);
-        if (lgdDom)
-            document.getElementById(this.map.id).removeChild(lgdDom);
+        if (lgdDom) {
+            var mapDom = document.getElementById(me.map.id) || document.getElementById(me.map.id + "_root");
+            mapDom.removeChild(lgdDom);
+        }
+        _content = [];
     };
 
     return Legend;

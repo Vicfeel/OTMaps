@@ -6,7 +6,7 @@
  */
 
 
-define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
+define(["lib/OTMaps/OTMap", "lib/OTMaps/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
         function RangeMap(options, callback) {
             OTMap.apply(this, arguments);
@@ -16,6 +16,7 @@ define(["app/tool/OTMaps/OTMap", "app/tool/OTMaps/Utils/DrawUtil"],
         RangeMap.prototype = new OTMap();
 
         RangeMap.prototype.draw = function (callback) {
+            debugger;
             var me = this;
             me.clear();
             DrawUtil.checkParams(me);

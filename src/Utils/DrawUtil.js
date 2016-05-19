@@ -4,7 +4,7 @@
  * @date 2016-05-08
  * @description 核心绘制组件
  */
-define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/components/Legend", "esri/symbols/TextSymbol", "esri/geometry/Polygon", "esri/geometry/Point",
+define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legend", "esri/symbols/TextSymbol", "esri/geometry/Polygon", "esri/geometry/Point",
         "esri/layers/LabelClass", "esri/symbols/Font", "esri/InfoTemplate", "esri/layers/FeatureLayer", "esri/tasks/query", "esri/graphic", "esri/geometry/Extent",
         "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleMarkerSymbol",
         "esri/renderers/smartMapping", "esri/renderers/ClassBreaksRenderer", "esri/renderers/HeatmapRenderer"],
@@ -65,9 +65,8 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                     opacity: 1
                 });
 
-                me._binded && me._binded.remove();
-                me._binded = me.map.on("layers-add-result", function () {
-                    debugger;
+                me.shareProp._binded && me.shareProp._binded.remove();
+                me.shareProp._binded = me.shareProp.map.on("layers-add-result", function () {
                     me.drawLayer.applyEdits(features, null, null);
                     callback && callback();
                 });
@@ -117,10 +116,10 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                     attr[diffField] = i;
                     for (var att in v.attributes)
                         attr[att] = v.attributes[att];
-                    if (!obj.getCorData(layerConfig.statData, v, layerConfig.corString, layerConfig.baseTag) === false)
+                    if (!(obj.getCorData(layerConfig.statData, v, layerConfig.corString, layerConfig.baseTag) === false))
                         attr[layerConfig.baseTag] = obj.getCorData(layerConfig.statData, v, layerConfig.corString, layerConfig.baseTag);
                     layerConfig.statTag.length && layerConfig.statTag.forEach(function (tag) {
-                        if (!obj.getCorData(layerConfig.statData, v, layerConfig.corString, tag) === false)
+                        if (!(obj.getCorData(layerConfig.statData, v, layerConfig.corString, tag) === false))
                             attr[tag] = obj.getCorData(layerConfig.statData, v, layerConfig.corString, tag);
                     });
                     var graphic = new Graphic(v.geometry);
@@ -145,8 +144,8 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                     opacity: 1
                 });
 
-                me._binded && me._binded.remove();
-                me._binded = me.shareProp._binded = me.map.on("layers-add-result", function () {
+                me.shareProp._binded && me.shareProp._binded.remove();
+                me.shareProp._binded = me.shareProp._binded = me.map.on("layers-add-result", function () {
                     me.drawLayer.applyEdits(features, null, null);
                     callback && callback();
                 });
@@ -178,6 +177,7 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
         };
         //创建图例
         DrawUtil.prototype.createLegend = function (me) {
+            debugger;
             var obj = this;
             if (!me.draw || !me.clear) return false;
             var legendConfig = me.config.legend;
@@ -293,7 +293,7 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
                 layerConfig.statTag.forEach(function (tag, i) {
                     legendItems.push({
                         color: colors[i],
-                        value: tag
+                        value: me.config.legend.itemTitle[i] || "默认指标名"
                     })
                 });
                 me._legendInfo.push(legendItems);
@@ -332,13 +332,14 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
             });
             saveLegend();
 
+
             //存储图例信息
             function saveLegend() {
                 var legendItems = [];
                 layerConfig.statTag.forEach(function (tag, i) {
                     legendItems.push({
                         color: colors[i],
-                        value: tag
+                        value: me.config.legend.itemTitle[i] || "默认指标名"
                     })
                 });
                 me._legendInfo.push(legendItems);
@@ -438,7 +439,6 @@ define(["app/tool/OTMaps/Utils/ColorUtil", "esri/Color", "app/tool/OTMaps/compon
         //绘制热力图
         DrawUtil.prototype.drawHeat = function (me) {
             var obj = this;
-            debugger;
             var colorStops = Array.prototype.slice.call(me.config.style.colorStops, 0);
             var heatmapRenderer = new HeatmapRenderer({
                 colorStops: colorStops,
