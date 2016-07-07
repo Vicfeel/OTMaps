@@ -6,7 +6,7 @@ OTMaps
 
 * **使用方法简单:**
 
-  三步完成专题图绘制，[使用方法](#使用方法usage)
+  简单几步完成专题图绘制，[使用方法](#使用方法usage)
 * **制图种类丰富:**
 
   当前支持`柱状图专题图` `饼状图专题图` `范围值专题图` `热力专题图`以及`柱状+范围值组合图` `饼状+范围值组合图`,并不断丰富中
@@ -20,13 +20,26 @@ OTMaps
   ```
 
 ##使用方法(Usage)
+* **路径配置**
+  在index.html中添加OTMap路径，**注意dojoConfig的配置要在arcgisJsApi引用之前**
 
+  ```js
+      var package_path = window.location.pathname.substring(0,window.location.pathname.lastIndexOf(''));
+      var dojoConfg = {
+        packages:[{
+          name:'OTMap',
+          location:package_path + '/OTMap'  //OTMap所处的位置，相对于index.html
+        }]
+    };
+  ```
+  
 ——以柱状图专题图为例
 * **引用及构建对象:**
 
   ```js
-  define(["core/HistogramMap"],function (HistogramMap) {
-    var histogramMap = new HistogramMap();
+  define(["OTMap"],function (OTMap) {
+    var histogramMap = new OTMap('histogram');
+    
   });
   ```
 * **制图参数设置:**
