@@ -18,16 +18,20 @@ OTMaps
   ```js
   histogramMap.setConfig(options).setStatData(data).draw(callback);
   ```
-##项目结构(Structure)
 
+##使用方法(Usage)
+
+* **文件下载**
+ 
+  将OTMap文件夹放置在自己的项目中，dist和src分别为`部署版`和`开发版`
   ```js
   dist         //压缩后代码，部署请使用该文件夹下OTMap
   src          //源代码，开发者请使用该文件夹下OTMap
   screenshots  //效果截图
   ```
-
-##使用方法(Usage)
+  
 * **路径配置**
+  
   在index.html中添加OTMap路径，**注意dojoConfig的配置要在arcgisJsApi引用之前**
 
   ```js
