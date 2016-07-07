@@ -24,11 +24,11 @@ OTMaps
   在index.html中添加OTMap路径，**注意dojoConfig的配置要在arcgisJsApi引用之前**
 
   ```js
-      var package_path = window.location.pathname.substring(0,window.location.pathname.lastIndexOf(''));
+    var package_path = window.location.pathname.substring(0,window.location.pathname.lastIndexOf(''));
       var dojoConfg = {
         packages:[{
           name:'OTMap',
-          location:package_path + '/OTMap'  //OTMap所处的位置，相对于index.html
+          location:package_path + '/OTMaps'  //OTMap所处的位置，相对于index.html
         }]
     };
   ```
