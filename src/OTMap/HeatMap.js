@@ -5,7 +5,7 @@
  * @description 热力专题图
  */
 
-define(["OTMap/OTMap", "Utils/DrawUtil"],
+define(["OTMap/OTMap", "OTMap/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
         function HeatMap(options, callback) {
             OTMap.apply(this, arguments);

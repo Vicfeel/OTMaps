@@ -21,8 +21,8 @@ OTMaps
 ##项目结构(Structure)
 
   ```js
-  dist    //压缩后代码，部署请使用该文件夹下OTMap
-  src     //源代码，开发者请使用该文件夹下OTMap
+  dist         //压缩后代码，部署请使用该文件夹下OTMap
+  src          //源代码，开发者请使用该文件夹下OTMap
   screenshots  //效果截图
   ```
 
@@ -35,7 +35,7 @@ OTMaps
       var dojoConfg = {
         packages:[{
           name:'OTMap',
-          location:package_path + '/OTMaps'  //OTMap所处的位置，相对于index.html
+          location:package_path + '/OTMap'  //OTMap所处的相对路径，当前为index.html同级目录
         }]
     };
   ```
@@ -44,7 +44,7 @@ OTMaps
 * **引用及构建对象:**
 
   ```js
-  define(["OTMap"],function (OTMap) {
+  define(["OTMap/index"],function (OTMap) {
     var histogramMap = new OTMap('histogram');
     
   });

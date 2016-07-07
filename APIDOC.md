@@ -2,13 +2,13 @@ OTMaps API Document
 ===
 #类索引
 
-* [HistogramMap(柱状图专题图)](#histogrammap)    
+* [HistogramMap(柱状图专题图)](#histogrammap)   构造类型`histogram`    
 
-* [PieMap(饼状图专题图)](#piemap)        
+* [PieMap(饼状图专题图)](#piemap)         构造类型`pie`
 
-* [RangeMap(范围值专题图)](#rangemap)    
+* [RangeMap(范围值专题图)](#rangemap)     构造类型`range`
 
-* [HeatMap(热力专题图)](#heatmap)              
+* [HeatMap(热力专题图)](#heatmap)         构造类型`heat`
 
 ###HistogramMap
 * 方法

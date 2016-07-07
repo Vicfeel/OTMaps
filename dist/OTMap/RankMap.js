@@ -1,1 +1,1 @@
-define(["OTMap","OTMap/Utils/DrawUtil"],function(t,r){function a(r,a){t.apply(this,arguments),this.type="Rank"}return a.prototype=new t,a.prototype.draw=function(t){var a=this;return a.clear(),r.drawHeat(a),a.drawLayer.redraw(),a.backupConfig(),t&&t(),a},a});
+define(["OTMap/OTMap","OTMap/Utils/DrawUtil"],function(t,a){function r(a,r){t.apply(this,arguments),this.type="Rank"}return r.prototype=new t,r.prototype.draw=function(t){var r=this;return r.clear(),a.drawHeat(r),r.drawLayer.redraw(),r.backupConfig(),t&&t(),r},r});

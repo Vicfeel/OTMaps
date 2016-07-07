@@ -5,7 +5,7 @@
  * @description 专题图父类
  */
 
-define(["Utils/DrawUtil"], function (DrawUtil) {
+define(["OTMap/Utils/DrawUtil"], function (DrawUtil) {
     //默认配置
     var defalutConfig = {
         map: null,

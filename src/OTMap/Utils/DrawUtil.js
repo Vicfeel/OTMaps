@@ -484,38 +484,38 @@ define(["OTMap/Utils/ColorUtil", "esri/Color", "OTMap/components/Legend", "esri/
             var legendConfig = me.config.legend;
             var labelConfig = me.config.label;
             if (!me.map)
-                throw new Error('OTMaps Error：[map] is required in config,use [setConfig] method to fix it');
+                throw new Error('OTMap Error：[map] is required in config,use [setConfig] method to fix it');
             if (!layerConfig.url)
-                throw new Error('OTMaps Error：[url] is required in layer config,use [setConfig] or [setLayer] method to fix it');
+                throw new Error('OTMap Error：[url] is required in layer config,use [setConfig] or [setLayer] method to fix it');
             if (legendConfig.show && !legendConfig.id)
-                throw new Error('OTMaps Error：[id] is required in label config,use [setConfig] method to fix it');
+                throw new Error('OTMap Error：[id] is required in label config,use [setConfig] method to fix it');
             if (labelConfig.show && !labelConfig.field)
-                throw new Error('OTMaps Error：[field] is required in label config,use [setConfig] method to fix it');
+                throw new Error('OTMap Error：[field] is required in label config,use [setConfig] method to fix it');
 
             switch (me.type) {
                 case 'Range' :
                 {
                     //if (layer.geometryType === "esriGeometryPolygon")
-                    //    throw new Error("OTMaps Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
+                    //    throw new Error("OTMap Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
                     if (!layerConfig.baseTag)
-                        throw new Error('OTMaps Error：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
+                        throw new Error('OTMap Error：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
                     break;
                 }
                 case 'Histogram':
                 case 'Pie':
                 {
                     //if (layer.geometryType === "esriGeometryPolygon")
-                    //    throw new Error("OTMaps Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
+                    //    throw new Error("OTMap Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
                     if (!layerConfig.statTag.length)
-                        throw new Error('OTMaps Error：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
+                        throw new Error('OTMap Error：some required params absent in layer config,use [setConfig] or [setLayer] method to fix it');
                     if (!me.config.layer.simple && !layerConfig.corString.length)
-                        throw new Error('OTMaps Error：if [simple] is false,[corString] is required,use [setConfig] or [setLayer] method to fix it');
+                        throw new Error('OTMap Error：if [simple] is false,[corString] is required,use [setConfig] or [setLayer] method to fix it');
                     break;
                 }
                 case 'Heat' :
                 {
                     //if (layer.geometryType === "esriGeometryPoint")
-                    //    throw new Error("OTMaps Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
+                    //    throw new Error("OTMap Error:[url] must be [esriGeometryPolygon] type when use " + me.type + "Map");
                     break;
                 }
             }

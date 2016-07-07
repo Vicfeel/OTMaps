@@ -6,7 +6,7 @@
  */
 
 
-define(["OTMap/OTMap", "Utils/DrawUtil"],
+define(["OTMap/OTMap", "OTMap/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
         function HistogramMap(options, callback) {
             OTMap.apply(this, arguments);
