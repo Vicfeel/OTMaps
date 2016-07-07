@@ -1,27 +1,27 @@
 /**
- * @author 张伟佩
+ * @author Vicfeel
  * @version 1.0
- * @date 2016-05-10
- * @description 柱状图专题图
+ * @date 2016-05-12
+ * @description 饼状图专题图
  */
 
 
-define(["lib/OTMaps/OTMap", "lib/OTMaps/Utils/DrawUtil"],
+define(["OTMap", "OTMap/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
-        function HistogramMap(options, callback) {
+        function PieMap(options, callback) {
             OTMap.apply(this, arguments);
-            this.type = "Histogram";
+            this.type = "Pie";
             this.setConfig({
                 label: {
                     xoffset: 0,
-                    yoffset: -0.02
+                    yoffset: -0.03
                 }
             });
         }
 
-        HistogramMap.prototype = new OTMap();
+        PieMap.prototype = new OTMap();
 
-        HistogramMap.prototype.draw = function (callback) {
+        PieMap.prototype.draw = function (callback) {
             var me = this;
             me.clear();
             DrawUtil.checkParams(me);
@@ -32,7 +32,7 @@ define(["lib/OTMaps/OTMap", "lib/OTMaps/Utils/DrawUtil"],
             }
 
             function renderDijit() {
-                DrawUtil.drawHistogram(me);
+                DrawUtil.drawPie(me);
                 me.config.legend.show && DrawUtil.createLegend(me);
                 me.config.label.show && DrawUtil.createLabel(me);
 
@@ -43,6 +43,6 @@ define(["lib/OTMaps/OTMap", "lib/OTMaps/Utils/DrawUtil"],
 
             return me;
         };
-        return HistogramMap;
+        return PieMap;
     });
 

@@ -1,12 +1,12 @@
 /**
- * @author 张伟佩
+ * @author Vicfeel
  * @version 1.0
  * @date 2016-05-04
  * @description 范围值专题图（分层设色图）
  */
 
 
-define(["lib/OTMaps/OTMap", "lib/OTMaps/Utils/DrawUtil"],
+define(["OTMap", "OTMap/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
         function RangeMap(options, callback) {
             OTMap.apply(this, arguments);
@@ -16,7 +16,6 @@ define(["lib/OTMaps/OTMap", "lib/OTMaps/Utils/DrawUtil"],
         RangeMap.prototype = new OTMap();
 
         RangeMap.prototype.draw = function (callback) {
-            debugger;
             var me = this;
             me.clear();
             DrawUtil.checkParams(me);

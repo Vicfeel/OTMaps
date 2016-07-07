@@ -1,11 +1,11 @@
 /**
- * @author 张伟佩
+ * @author Vicfeel
  * @version 1.0
  * @date 2016-05-04
  * @description 专题图父类
  */
 
-define(["lib/OTMaps/Utils/DrawUtil"], function (DrawUtil) {
+define(["Utils/DrawUtil"], function (DrawUtil) {
     //默认配置
     var defalutConfig = {
         map: null,

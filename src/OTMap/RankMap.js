@@ -1,12 +1,12 @@
 /**
- * @author 张伟佩
+ * @author Vicfeel
  * @version 1.0
  * @date 2016-05-12
  * @description 热力专题图
  */
 
 
-define(["lib/OTMaps/OTMap", "lib/OTMaps/Utils/DrawUtil"],
+define(["OTMap", "OTMap/Utils/DrawUtil"],
     function (OTMap, DrawUtil) {
         function HeatMap(options, callback) {
             OTMap.apply(this, arguments);

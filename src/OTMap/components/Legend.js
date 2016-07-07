@@ -1,5 +1,5 @@
 /**
- * @author 张伟佩
+ * @author Vicfeel
  * @version 1.0
  * @date 2016-05-11
  * @description 图例组件

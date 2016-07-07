@@ -18,6 +18,13 @@ OTMaps
   ```js
   histogramMap.setConfig(options).setStatData(data).draw(callback);
   ```
+##项目结构(Structure)
+
+  ```js
+  dist    //压缩后代码，部署请使用该文件夹下OTMap
+  src     //源代码，开发者请使用该文件夹下OTMap
+  screenshots  //效果截图
+  ```
 
 ##使用方法(Usage)
 * **路径配置**
@@ -57,6 +64,12 @@ OTMaps
   ```js
   histogramMap.draw();
  ```
+## 效果截图(screenshots)
+
+![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/rangeTemplate.png)
+![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/histogramTemplate.png)
+![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/pieTemplate.png)
+![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/heatTemplate.png)
 
 ## 问题反馈(Questions)
 

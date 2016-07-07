@@ -3,12 +3,12 @@
  */
 
 var gulp = require('gulp'),
-    uglify = require('gulp-uglify')
+    uglify = require('gulp-uglify');
 
 gulp.task('uglify', function () {
     gulp.src('./src/**/*.js')
-        .pipe(uglify())    //Ñ¹Ëõ
-        .pipe(gulp.dest('./dist/'));  //Êä³ö
+        .pipe(uglify())
+        .pipe(gulp.dest('./dist/'));
 });
 
 gulp.task('default', ['uglify']);

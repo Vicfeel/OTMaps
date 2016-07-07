@@ -1,14 +1,14 @@
 /**
- * @author 张伟佩
+ * @author Vicfeel
  * @version 1.0
  * @date 2016-05-08
  * @description 核心绘制组件
  */
-define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legend", "esri/symbols/TextSymbol", "esri/geometry/Polygon", "esri/geometry/Point",
+define(["OTMap/Utils/ColorUtil", "esri/Color", "OTMap/components/Legend", "esri/symbols/TextSymbol", "esri/geometry/Polygon", "esri/geometry/Point", "esri/geometry/Circle",
         "esri/layers/LabelClass", "esri/symbols/Font", "esri/InfoTemplate", "esri/layers/FeatureLayer", "esri/tasks/query", "esri/graphic", "esri/geometry/Extent",
         "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleMarkerSymbol",
         "esri/renderers/smartMapping", "esri/renderers/ClassBreaksRenderer", "esri/renderers/HeatmapRenderer"],
-    function (ColorUtil, Color, Legend, TextSymbol, Polygon, Point,
+    function (ColorUtil, Color, Legend, TextSymbol, Polygon, Point, Circle,
               LabelClass, Font, InfoTemplate, FeatureLayer, Query, Graphic, Extent,
               SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol,
               smartMapping, ClassBreaksRenderer, HeatmapRenderer) {
@@ -177,7 +177,6 @@ define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legen
         };
         //创建图例
         DrawUtil.prototype.createLegend = function (me) {
-            debugger;
             var obj = this;
             if (!me.draw || !me.clear) return false;
             var legendConfig = me.config.legend;
@@ -251,7 +250,9 @@ define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legen
         DrawUtil.prototype.drawHistogram = function (me) {
             var obj = this;
             var layerConfig = me.config.layer;
-            var chartHeight = (me._features[0]._extent.ymax - me._features[0]._extent.ymin) / 3 * 2;
+
+            var ave = getAverageUnit();
+            var chartHeight = ave / 2;
             var chartWidth = chartHeight / 5;
             var maxStatValue = getMaxValue();
             var colors = ColorUtil.getGradientColor(me.config.style.statColor, '#ddd', layerConfig.statTag.length + 1).slice(0, layerConfig.statTag.length);
@@ -272,6 +273,17 @@ define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legen
                 }
             });
             saveLegend();
+
+            //获取平均统计单元大小
+            function getAverageUnit() {
+                var min = me._features[0]._extent.ymax - me._features[0]._extent.ymin;
+                var max = me._features[0]._extent.ymax - me._features[0]._extent.ymin;
+                me._features.forEach(function (f) {
+                    min = (f._extent.ymax - f._extent.ymin) < min ? (f._extent.ymax - f._extent.ymin) : min;
+                    max = (f._extent.ymax - f._extent.ymin) > max ? (f._extent.ymax - f._extent.ymin) : max;
+                });
+                return (min + max) / 2;
+            }
 
             //获取最大值
             function getMaxValue() {
@@ -305,33 +317,49 @@ define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legen
         DrawUtil.prototype.drawPie = function (me) {
             var obj = this;
             var layerConfig = me.config.layer;
-            var chartWidth = 0.015;
             var colors = ColorUtil.getGradientColor(me.config.style.statColor, '#ddd', layerConfig.statTag.length + 1).slice(0, layerConfig.statTag.length);
+            //计算全部值中的最大最小值，用于显示饼的相对大小
+            var maxTotalValue = 0, minTotalValue = 0;
+            me._features.forEach(function (feature) {
+                feature.attributes['totalValue'] = 0;
+                //计算总和
+                layerConfig.statTag.forEach(function (tag) {
+                    feature.attributes['totalValue'] += feature.attributes[tag];
+                });
+                maxTotalValue = feature.attributes['totalValue'] > maxTotalValue ? feature.attributes['totalValue'] : maxTotalValue;
+                minTotalValue = feature.attributes['totalValue'] < minTotalValue ? feature.attributes['totalValue'] : minTotalValue;
+            });
+            //绘制每个饼
             me._features.forEach(function (feature) {
                 var geometry = feature.geometry;
                 var center = geometry.getCentroid();
-                var totalValue = 0, startDegree = 0, endDegree = 0;
-                //计算总和
-                layerConfig.statTag.forEach(function (tag) {
-                    totalValue += feature.attributes[tag];
-                });
+                var startDegree = 0, endDegree = 0;
+                var standRadius = (me._features[0]._extent.ymax - me._features[0]._extent.ymin) / 6;
+                var pieRadius = maxTotalValue == 0 ? standRadius : standRadius * feature.attributes['totalValue'] / maxTotalValue;
                 layerConfig.statTag.forEach(function (tag, i) {
                     var curValue = feature.attributes[tag];
-                    endDegree = startDegree + Math.PI * 2 * curValue / totalValue;
-                    var rings = [];
+                    endDegree = feature.attributes['totalValue'] == 0 ? 0 : startDegree + Math.PI * 2 * curValue / feature.attributes['totalValue'];
                     var symbol = new SimpleFillSymbol().setColor(colors[i]);
                     symbol.setOutline(new SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new Color([60, 60, 60, 0.6]), 1));
-
-                    rings.push([center.x, center.y]);
-                    getRings(center, rings, startDegree, endDegree);
-                    rings.push([center.x, center.y]);
-                    var polygon = new Polygon(rings);
+                    //0和全部的情况
+                    if (curValue == 0) {
+                        return;
+                    }
+                    else if (curValue === feature.attributes['totalValue']) {
+                        var polygon = new Circle(center, {radius: pieRadius});
+                    }
+                    else {
+                        var rings = [];
+                        rings.push([center.x, center.y]);
+                        getRings(center, rings, startDegree, endDegree, pieRadius);
+                        rings.push([center.x, center.y]);
+                        polygon = new Polygon(rings);
+                    }
                     me.drawLayer.add(new Graphic(polygon, symbol));
                     startDegree = endDegree;
                 });
             });
             saveLegend();
-
 
             //存储图例信息
             function saveLegend() {
@@ -345,12 +373,11 @@ define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legen
                 me._legendInfo.push(legendItems);
             }
 
-            function getRingsForHalf(center, rings, startDegree, endDegree) {
+            function getRingsForHalf(center, rings, startDegree, endDegree, r) {
                 var maxDecimal = 0.000001;
                 var num = 50;
                 var centerX = center.x;
                 var centerY = center.y;
-                var r = (me._features[0]._extent.ymax - me._features[0]._extent.ymin) / 4;
 
                 if (startDegree < Math.PI / 2 && endDegree <= Math.PI / 2) {
                     var xSizeBegin = centerX + Math.cos(endDegree) * r;
@@ -399,38 +426,38 @@ define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legen
 
             }
 
-            function getRings(center, rings, startDegree, endDegree) {
+            function getRings(center, rings, startDegree, endDegree, r) {
                 if (startDegree < Math.PI / 2 && endDegree > Math.PI / 2 && endDegree <= Math.PI) {
-                    getRingsForHalf(center, rings, startDegree, Math.PI / 2);
-                    getRingsForHalf(center, rings, Math.PI / 2, endDegree);
+                    getRingsForHalf(center, rings, startDegree, Math.PI / 2, r);
+                    getRingsForHalf(center, rings, Math.PI / 2, endDegree, r);
                 }
                 else if (startDegree < Math.PI / 2 && endDegree > Math.PI && endDegree <= Math.PI * 3 / 2) {
-                    getRingsForHalf(center, rings, startDegree, Math.PI / 2);
-                    getRingsForHalf(center, rings, Math.PI / 2, Math.PI);
-                    getRingsForHalf(center, rings, Math.PI, endDegree);
+                    getRingsForHalf(center, rings, startDegree, Math.PI / 2, r);
+                    getRingsForHalf(center, rings, Math.PI / 2, Math.PI, r);
+                    getRingsForHalf(center, rings, Math.PI, endDegree, r);
 
                 }
                 else if (startDegree < Math.PI / 2 && endDegree > Math.PI * 3 / 2 && endDegree <= Math.PI * 2) {
-                    getRingsForHalf(center, rings, startDegree, Math.PI / 2);
-                    getRingsForHalf(center, rings, Math.PI / 2, Math.PI);
-                    getRingsForHalf(center, rings, Math.PI, Math.PI * 3 / 2);
-                    getRingsForHalf(center, rings, Math.PI * 3 / 2, endDegree);
+                    getRingsForHalf(center, rings, startDegree, Math.PI / 2, r);
+                    getRingsForHalf(center, rings, Math.PI / 2, Math.PI, r);
+                    getRingsForHalf(center, rings, Math.PI, Math.PI * 3 / 2, r);
+                    getRingsForHalf(center, rings, Math.PI * 3 / 2, endDegree, r);
 
                 }
                 else if (startDegree >= Math.PI / 2 && startDegree < Math.PI && endDegree > Math.PI && endDegree <= Math.PI * 3 / 2) {
-                    getRingsForHalf(center, rings, startDegree, Math.PI);
-                    getRingsForHalf(center, rings, Math.PI, endDegree);
+                    getRingsForHalf(center, rings, startDegree, Math.PI, r);
+                    getRingsForHalf(center, rings, Math.PI, endDegree, r);
                 }
                 else if (startDegree >= Math.PI / 2 && startDegree < Math.PI && endDegree > Math.PI * 3 / 2) {
-                    getRingsForHalf(center, rings, startDegree, Math.PI);
-                    getRingsForHalf(center, rings, Math.PI, Math.PI * 3 / 2);
+                    getRingsForHalf(center, rings, startDegree, Math.PI, r);
+                    getRingsForHalf(center, rings, Math.PI, Math.PI * 3 / 2, r);
                     getRingsForHalf(center, rings, Math.PI * 3 / 2, endDegree);
                 }
                 else if (startDegree >= Math.PI && startDegree < Math.PI * 3 / 2 && endDegree > Math.PI * 3 / 2) {
-                    getRingsForHalf(center, rings, startDegree, Math.PI * 3 / 2);
-                    getRingsForHalf(center, rings, Math.PI * 3 / 2, endDegree);
+                    getRingsForHalf(center, rings, startDegree, Math.PI * 3 / 2, r);
+                    getRingsForHalf(center, rings, Math.PI * 3 / 2, endDegree, r);
                 } else {
-                    getRingsForHalf(center, rings, startDegree, endDegree);
+                    getRingsForHalf(center, rings, startDegree, endDegree, r);
                 }
             }
 
@@ -513,7 +540,9 @@ define(["lib/OTMaps/Utils/ColorUtil", "esri/Color", "lib/OTMaps/components/Legen
                     }
                 });
                 if (checked == corString.length && checked != 0) {
-                    return parseFloat(statData[i][dataTag]);
+                    var result = parseFloat(statData[i][dataTag]);
+                    result = isNaN(result) ? 0 : result;
+                    return result;
                 }
             }
             return false;
