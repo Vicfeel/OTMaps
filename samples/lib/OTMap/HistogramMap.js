@@ -1,1 +1,48 @@
-define(["OTMap/OTMap","OTMap/Utils/DrawUtil"],function(e,a){function r(a,r){e.apply(this,arguments),this.type="Histogram",this.setConfig({label:{xoffset:0,yoffset:-.02}})}return r.prototype=new e,r.prototype.draw=function(e){function r(){n.config.layer.baseTag&&n.config.layer.baseTag.length>0?a.drawRange(n,t):a.drawUnique(n,t)}function t(){a.drawHistogram(n),n.config.legend.show&&a.createLegend(n),n.config.label.show&&a.createLabel(n),n.drawLayer.redraw(),n.backupConfig(),e&&e()}var n=this;return n.clear(),a.checkParams(n),n.config.layer.simple?a.createSLayer(n,r):a.createMLayer(n,r),n},r});
+/**
+ * @author Vicfeel
+ * @version 1.0
+ * @date 2016-05-10
+ * @description 柱状图专题图
+ */
+
+
+define(["OTMap/OTMap", "OTMap/Utils/DrawUtil"],
+    function (OTMap, DrawUtil) {
+        function HistogramMap(options, callback) {
+            OTMap.apply(this, arguments);
+            this.type = "Histogram";
+            this.setConfig({
+                label: {
+                    xoffset: 0,
+                    yoffset: -0.02
+                }
+            });
+        }
+
+        HistogramMap.prototype = new OTMap();
+
+        HistogramMap.prototype.draw = function (callback) {
+            var me = this;
+            me.clear();
+            DrawUtil.checkParams(me);
+            me.config.layer.simple ? DrawUtil.createSLayer(me, renderBase) : DrawUtil.createMLayer(me, renderBase);
+
+            function renderBase() {
+                me.config.layer.baseTag && me.config.layer.baseTag.length > 0 ? DrawUtil.drawRange(me, renderDijit) : DrawUtil.drawUnique(me, renderDijit);
+            }
+
+            function renderDijit() {
+                DrawUtil.drawHistogram(me);
+                me.config.legend.show && DrawUtil.createLegend(me);
+                me.config.label.show && DrawUtil.createLabel(me);
+
+                me.drawLayer.redraw();
+                me.backupConfig();
+                if (callback) callback();
+            }
+
+            return me;
+        };
+        return HistogramMap;
+    });
+

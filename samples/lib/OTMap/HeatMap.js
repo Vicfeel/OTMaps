@@ -1,1 +1,31 @@
-define(["OTMap/OTMap","OTMap/Utils/DrawUtil"],function(a,t){function r(t,r){a.apply(this,arguments),this.type="Heat"}return r.prototype=new a,r.prototype.draw=function(a){var r=this;return r.clear(),t.checkParams(r).createSLayer(r,function(){t.drawHeat(r),r.drawLayer.redraw(),r.backupConfig(),a&&a()}),r},r});
+/**
+ * @author Vicfeel
+ * @version 1.0
+ * @date 2016-05-12
+ * @description 热力专题图
+ */
+
+define(["OTMap/OTMap", "OTMap/Utils/DrawUtil"],
+    function (OTMap, DrawUtil) {
+        function HeatMap(options, callback) {
+            OTMap.apply(this, arguments);
+            this.type = "Heat";
+        }
+
+        HeatMap.prototype = new OTMap();
+
+        HeatMap.prototype.draw = function (callback) {
+            var me = this;
+            me.clear();
+            DrawUtil.checkParams(me).createSLayer(me, function () {
+                DrawUtil.drawHeat(me);
+                me.drawLayer.redraw();
+                me.backupConfig();
+                if (callback) callback();
+            });
+
+            return me;
+        };
+        return HeatMap;
+    });
+
