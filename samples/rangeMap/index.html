@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>OTMap样例——范围值专题图</title>
+    <link rel="stylesheet" href="//js.arcgis.com/3.17/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="//js.arcgis.com/3.17/esri/css/esri.css">
+    <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1.title {
+            position: absolute;
+            text-align: center;
+            width: 100%;
+            top: 20px;
+            margin: 0px auto;
+            font-family: "Microsoft Yahei";
+        }
+
+        .btn {
+            position: absolute;
+            top: 20px;
+            border: 1px solid #333;
+            background: #fff;
+            width: 80px;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #eee;
+        }
+
+        #btnDraw {
+            right: 100px;
+            border-bottom-left-radius: 5px;
+            border-top-left-radius: 5px;
+        }
+
+        #btnClear {
+            right: 20px;
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+<h1 class="title">OTMap样例-范围值专题图</h1>
+
+<div id="btnDraw" class="btn">绘制</div>
+<div id="btnClear" class="btn">清除</div>
+<script>
+    var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+    var dojoConfig = {
+        packages: [{
+            name: 'OTMap',
+            location: package_path + '/../dist/OTMap'  //OTMap所处的相对路径，当前为index.html同级目录
+        }],
+        parseOnLoad: true
+    };
+</script>
+<script src="//js.arcgis.com/3.17/"></script>
+<script src="index.js"></script>
+</body>
+</html>
