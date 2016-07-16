@@ -36,7 +36,7 @@ OTMaps
 
   ```js
     var package_path = window.location.pathname.substring(0,window.location.pathname.lastIndexOf(''));
-      var dojoConfg = {
+      var dojoConfig = {
         packages:[{
           name:'OTMap',
           location:package_path + '/OTMap'  //OTMap所处的相对路径，当前为index.html同级目录
