@@ -69,7 +69,7 @@ public class proxy : IHttpHandler {
 
         #region POST方式
         // Set body of request for POST requests
-        if (context.Request.InputStream.Length > 0)
+        if (context.Request.InputStream.Length >= 0)
         {
             byte[] bytes = new byte[context.Request.InputStream.Length];
             context.Request.InputStream.Read(bytes, 0, (int)context.Request.InputStream.Length);
@@ -109,7 +109,7 @@ public class proxy : IHttpHandler {
         {
             response.StatusCode = 500;
             response.StatusDescription = webExc.Status.ToString();
-            response.Write(webExc.Response);
+            response.Write(webExc.Message);
             response.End();
             return;
         }

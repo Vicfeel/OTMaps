@@ -15,12 +15,9 @@ require(["OTMap/index", "esri/layers/FeatureLayer", "esri/map", "dojo/domReady!"
             logo: false,
             showAttribution: false
         });
-        //解决跨域请求
-        esriConfig.defaults.io.proxyUrl = "proxy.ashx?";
-        esriConfig.defaults.io.alwaysUseProxy = true;
 
         //服务地址
-        var serviceURL = "//sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Census_USA/MapServer/3";
+        var serviceURL = "http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Demographics/ESRI_Census_USA/MapServer/3";
 
         //初始化OTMap对象
         var rangeMap = new OTMap('range');
