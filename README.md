@@ -2,6 +2,10 @@ OTMaps
 ====
 基于`ArcGIS API for Javascript`封装的专题图制图类库，要求版本`3.13+`
 
+##在线样例(Samples)
+
+* **热力图:** &emsp; [访问地址](http://vicfeel.github.io/OTMaps/samples/heatMap/)
+
 ##类库特点(Advantage)
 
 * **使用方法简单:**
