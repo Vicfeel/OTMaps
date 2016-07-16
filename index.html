@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>OTMaps by Vicfeel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,118 +8,146 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">OTMaps</h1>
-      <h2 class="project-tagline">基于ArcGIS API for JavaScript封装的专题图制图类库</h2>
-      <a href="https://github.com/Vicfeel/OTMaps" class="btn">View on GitHub</a>
-      <a href="https://github.com/Vicfeel/OTMaps/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/Vicfeel/OTMaps/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+</head>
+<body>
+<section class="page-header">
+    <h1 class="project-name">OTMaps</h1>
 
-    <section class="main-content">
-      <h2>
-<a id="类库特点advantage" class="anchor" href="#%E7%B1%BB%E5%BA%93%E7%89%B9%E7%82%B9advantage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>类库特点(Advantage)</h2>
+    <h2 class="project-tagline">基于ArcGIS API for JavaScript封装的专题图制图类库</h2>
+    <a href="https://github.com/Vicfeel/OTMaps" class="btn">View on GitHub</a>
+    <a href="https://github.com/Vicfeel/OTMaps/zipball/master" class="btn">Download .zip</a>
+    <a href="https://github.com/Vicfeel/OTMaps/tarball/master" class="btn">Download .tar.gz</a>
+</section>
 
-<ul>
-<li>
-<p><strong>使用方法简单:</strong></p>
+<section class="main-content">
+    <h2>
+        <a id="类库特点advantage" class="anchor" href="#%E7%B1%BB%E5%BA%93%E7%89%B9%E7%82%B9advantage"
+           aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>类库特点(Advantage)</h2>
 
-<p>简单几步完成专题图绘制，<a href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95usage">使用方法</a></p>
-</li>
-<li>
-<p><strong>制图种类丰富:</strong></p>
+    <ul>
+        <li>
+            <p><strong>使用方法简单:</strong></p>
 
-<p>当前支持<code>柱状图专题图</code> <code>饼状图专题图</code> <code>范围值专题图</code> <code>热力专题图</code>以及<code>柱状+范围值组合图</code> <code>饼状+范围值组合图</code>,并不断丰富中</p>
-</li>
-<li>
-<p><strong>支持独立统计数据:</strong></p>
+            <p>简单几步完成专题图绘制，<a href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95usage">使用方法</a></p>
+        </li>
+        <li>
+            <p><strong>制图种类丰富:</strong></p>
 
-<p>统计数据不依赖地图服务，支持基于<code>独立统计数据</code>的专题图开发</p>
-</li>
-<li>
-<p><strong>支持链式调用:</strong></p>
+            <p>当前支持<code>柱状图专题图</code> <code>饼状图专题图</code> <code>范围值专题图</code>
+                <code>热力专题图</code>以及<code>柱状+范围值组合图</code> <code>饼状+范围值组合图</code>,并不断丰富中</p>
+        </li>
+        <li>
+            <p><strong>支持独立统计数据:</strong></p>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">histogramMap</span>.<span class="pl-en">setConfig</span>(options).<span class="pl-en">setStatData</span>(data).<span class="pl-en">draw</span>(callback);</pre></div>
-</li>
-</ul>
+            <p>统计数据不依赖地图服务，支持基于<code>独立统计数据</code>的专题图开发</p>
+        </li>
+        <li>
+            <p><strong>支持链式调用:</strong></p>
 
-<h2>
-<a id="使用方法usage" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>使用方法(Usage)</h2>
+            <div class="highlight highlight-source-js">
+                <pre><span class="pl-smi">histogramMap</span>.<span class="pl-en">setConfig</span>(options).<span
+                        class="pl-en">setStatData</span>(data).<span class="pl-en">draw</span>(callback);</pre>
+            </div>
+        </li>
+    </ul>
 
-<ul>
-<li>
-<p><strong>文件下载</strong></p>
+    <h2>
+        <a id="使用方法usage" class="anchor" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95usage" aria-hidden="true"><span
+                aria-hidden="true" class="octicon octicon-link"></span></a>使用方法(Usage)</h2>
 
-<p>将OTMap文件夹放置在自己的项目中，dist和src分别为<code>部署版</code>和<code>开发版</code></p>
+    <ul>
+        <li>
+            <p><strong>文件下载</strong></p>
 
-<div class="highlight highlight-source-js"><pre>dist         <span class="pl-c">//压缩后代码，部署请使用该文件夹下OTMap</span>
+            <p>将OTMap文件夹放置在自己的项目中，dist和src分别为<code>部署版</code>和<code>开发版</code></p>
+
+            <div class="highlight highlight-source-js"><pre>dist         <span
+                    class="pl-c">//压缩后代码，部署请使用该文件夹下OTMap</span>
 src          <span class="pl-c">//源代码，开发者请使用该文件夹下OTMap</span>
-screenshots  <span class="pl-c">//效果截图</span></pre></div>
-</li>
-<li>
-<p><strong>路径配置</strong></p>
+screenshots  <span class="pl-c">//效果截图</span></pre>
+            </div>
+        </li>
+        <li>
+            <p><strong>路径配置</strong></p>
 
-<p>在index.html中添加OTMap路径，<strong>注意dojoConfig的配置要在arcgisJsApi引用之前</strong></p>
+            <p>在index.html中添加OTMap路径，<strong>注意dojoConfig的配置要在arcgisJsApi引用之前</strong></p>
 
-<div class="highlight highlight-source-js"><pre>  <span class="pl-k">var</span> package_path <span class="pl-k">=</span> <span class="pl-c1">window</span>.<span class="pl-c1">location</span>.<span class="pl-c1">pathname</span>.<span class="pl-c1">substring</span>(<span class="pl-c1">0</span>,<span class="pl-c1">window</span>.<span class="pl-c1">location</span>.<span class="pl-c1">pathname</span>.<span class="pl-c1">lastIndexOf</span>(<span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>));
+            <div class="highlight highlight-source-js"><pre>  <span class="pl-k">var</span> package_path <span
+                    class="pl-k">=</span> <span class="pl-c1">window</span>.<span class="pl-c1">location</span>.<span
+                    class="pl-c1">pathname</span>.<span class="pl-c1">substring</span>(<span
+                    class="pl-c1">0</span>,<span class="pl-c1">window</span>.<span class="pl-c1">location</span>.<span
+                    class="pl-c1">pathname</span>.<span class="pl-c1">lastIndexOf</span>(<span class="pl-s"><span
+                    class="pl-pds">'</span><span class="pl-pds">'</span></span>));
     <span class="pl-k">var</span> dojoConfig <span class="pl-k">=</span> {
       packages<span class="pl-k">:</span>[{
-        name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>OTMap<span class="pl-pds">'</span></span>,
-        location<span class="pl-k">:</span>package_path <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>/OTMap<span class="pl-pds">'</span></span>  <span class="pl-c">//OTMap所处的相对路径，当前为index.html同级目录</span>
+        name<span class="pl-k">:</span><span class="pl-s"><span class="pl-pds">'</span>OTMap<span
+                        class="pl-pds">'</span></span>,
+        location<span class="pl-k">:</span>package_path <span class="pl-k">+</span> <span class="pl-s"><span
+                        class="pl-pds">'</span>/OTMap<span class="pl-pds">'</span></span>  <span class="pl-c">//OTMap所处的相对路径，当前为index.html同级目录</span>
       }]
-  };</pre></div>
-</li>
-</ul>
+  };</pre>
+            </div>
+        </li>
+    </ul>
 
-<p>——以柱状图专题图为例</p>
+    <p>——以柱状图专题图为例</p>
 
-<ul>
-<li>
-<p><strong>引用及构建对象:</strong></p>
+    <ul>
+        <li>
+            <p><strong>引用及构建对象:</strong></p>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-en">define</span>([<span class="pl-s"><span class="pl-pds">"</span>OTMap/index<span class="pl-pds">"</span></span>],<span class="pl-k">function</span> (<span class="pl-smi">OTMap</span>) {
-  <span class="pl-k">var</span> histogramMap <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-en">OTMap</span>(<span class="pl-s"><span class="pl-pds">'</span>histogram<span class="pl-pds">'</span></span>);
+            <div class="highlight highlight-source-js"><pre><span class="pl-en">define</span>([<span class="pl-s"><span
+                    class="pl-pds">"</span>OTMap/index<span class="pl-pds">"</span></span>],<span
+                    class="pl-k">function</span> (<span class="pl-smi">OTMap</span>) {
+  <span class="pl-k">var</span> histogramMap <span class="pl-k">=</span> <span class="pl-k">new</span> <span
+                        class="pl-en">OTMap</span>(<span class="pl-s"><span class="pl-pds">'</span>histogram<span
+                        class="pl-pds">'</span></span>);
 
-});</pre></div>
-</li>
-<li>
-<p><strong>制图参数设置:</strong></p>
+});</pre>
+            </div>
+        </li>
+        <li>
+            <p><strong>制图参数设置:</strong></p>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">histogramMap</span>.<span class="pl-en">setConfig</span>({
+            <div class="highlight highlight-source-js"><pre><span class="pl-smi">histogramMap</span>.<span
+                    class="pl-en">setConfig</span>({
   map<span class="pl-k">:</span> myMap,
   layer<span class="pl-k">:</span> {}
   <span class="pl-k">...</span> <span class="pl-k">...</span>
-});</pre></div>
+});</pre>
+            </div>
 
-<p><a href="https://github.com/Vicfeel/OTMaps/blob/master/APIDOC.md">详细开发API</a></p>
-</li>
-<li>
-<p><strong>专题图绘制:</strong></p>
+            <p><a href="https://github.com/Vicfeel/OTMaps/blob/master/APIDOC.md">详细开发API</a></p>
+        </li>
+        <li>
+            <p><strong>专题图绘制:</strong></p>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-smi">histogramMap</span>.<span class="pl-en">draw</span>();</pre></div>
-</li>
-</ul>
+            <div class="highlight highlight-source-js">
+                <pre><span class="pl-smi">histogramMap</span>.<span class="pl-en">draw</span>();</pre>
+            </div>
+        </li>
+    </ul>
 
-<h2>
-<a id="问题反馈questions" class="anchor" href="#%E9%97%AE%E9%A2%98%E5%8F%8D%E9%A6%88questions" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>问题反馈(Questions)</h2>
+    <h2>
+        <a id="问题反馈questions" class="anchor" href="#%E9%97%AE%E9%A2%98%E5%8F%8D%E9%A6%88questions"
+           aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>问题反馈(Questions)</h2>
 
-<p>如何有任何疑问或更好的建议，请通过 <a href="https://github.com/Vicfeel/OTMaps/issues/new">New Issue</a> 来向我反馈。</p>
+    <p>如何有任何疑问或更好的建议，请通过 <a href="https://github.com/Vicfeel/OTMaps/issues/new">New Issue</a> 来向我反馈。</p>
 
-<h2>
-<a id="项目许可license" class="anchor" href="#%E9%A1%B9%E7%9B%AE%E8%AE%B8%E5%8F%AFlicense" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>项目许可(License)</h2>
+    <h2>
+        <a id="项目许可license" class="anchor" href="#%E9%A1%B9%E7%9B%AE%E8%AE%B8%E5%8F%AFlicense" aria-hidden="true"><span
+                aria-hidden="true" class="octicon octicon-link"></span></a>项目许可(License)</h2>
 
-<p>OTMaps is available under the terms of the <a href="https://github.com/Vicfeel/OTMaps/blob/master/LICENSE.md">MIT License</a>.</p>
+    <p>OTMaps is available under the terms of the <a href="https://github.com/Vicfeel/OTMaps/blob/master/LICENSE.md">MIT
+        License</a>.</p>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/Vicfeel/OTMaps">OTMaps</a> is maintained by <a href="https://github.com/Vicfeel">Vicfeel</a>.</span>
+    <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/Vicfeel/OTMaps">OTMaps</a> is maintained by <a
+                href="https://github.com/Vicfeel">Vicfeel</a>.</span>
+    </footer>
 
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
+</section>
 
-    </section>
 
-  
-  </body>
+</body>
 </html>

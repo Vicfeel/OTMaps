@@ -1,0 +1,1 @@
+define(["OTMap/Utils/DrawUtil","OTMap/HistogramMap","OTMap/PieMap","OTMap/RangeMap","OTMap/HeatMap"],function(a,e,r,t,n){function p(a,p){var i;switch(a){case"range":i=new t;break;case"histogram":i=new e;break;case"pie":i=new r;break;case"heat":i=new n;break;default:throw new Error("OTMap Error：wrong thematic Map type")}return i}return p});
