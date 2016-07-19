@@ -49,6 +49,7 @@ OTMaps API Document
 |         |   show      |optional   | Bool      |是否显示图例,默认是`false` |
 |         |   id      |optional   | String      |用于创建图例容器的id，方便在css进行样式调整,默认是`legendDiv` |
 |         |   title      |optional   |Array or  String |图例标题,若指定了`basetag`,需传入一个数组,第一个为底部范围值图例名称，第二个为统计图图例名称,默认是`图例名称` |
+|         |   itemTitle      |optional   |Array |图例子项的标题, 分别对应`statTag`中的统计指标 |           
 
 ###PieMap
 * 方法
@@ -89,6 +90,7 @@ OTMaps API Document
 |         |   show      |optional   | Bool      |是否显示图例,默认是`false` |
 |         |   id      |optional   | String      |用于创建图例容器的id，方便在css进行样式调整,默认是`legendDiv` |
 |         |   title      |optional   |Array or  String |图例标题,若指定了`basetag`,需传入一个数组,第一个为底部范围值图例名称，第二个为统计图图例名称,默认是`图例名称` |
+|         |   itemTitle      |optional   |Array |图例子项的标题, 分别对应`statTag`中的统计指标 |           
 
 ###RangeMap
 * 方法
