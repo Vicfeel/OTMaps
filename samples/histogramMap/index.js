@@ -2,7 +2,7 @@
  *
  *  Author: Vicfeel
  *  Date: 16/7/19
- *  Descirption: 绘制范围值专题图
+ *  Descirption: 绘制柱状统计专题图
  *
  **/
 require(["OTMap/index", "esri/layers/FeatureLayer", "esri/map", "esri/renderers/smartMapping", "esri/layers/ArcGISDynamicMapServiceLayer", "dojo/domReady!"],
@@ -30,36 +30,39 @@ require(["OTMap/index", "esri/layers/FeatureLayer", "esri/map", "esri/renderers/
         //专题制图统计单元服务地址（以ESRI在线免费服务为例）
         var serviceURL = "//sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/SuperTuesdaySample/MapServer/1";
         //初始化OTMap对象
-        var rangeMap = new OTMap('range');
+        var histogramMap = new OTMap('histogram');
         //设置参数（详细参数请参见API)
-        rangeMap.setConfig({
+        histogramMap.setConfig({
             map: map,
             layer: {
                 url: serviceURL, //服务地址
-                baseTag: "AREA" //统计字段
+                baseTag: "AREA", //底图柱状统计统计字段
+                statTag: ["ClintonP", "ObamaP"] //柱状图统计字段
             },
             style: {
-                baseColor: "#27ae60" //范围颜色
+                baseColor: "#27ae60", //范围颜色
+                statColor: "#ff9800"
             },
             label: {
                 show: true,
-                field: 'NAME'
+                field: 'NAME' //标注字段（州名）
             },
             legend: {
                 show: true,
-                title: "州面积/平方米"
+                title: ["州面积/平方米", "支持对象"],
+                itemTitle: ["克林顿", "奥巴马"]
             }
         });
         //绑定事件
         document.getElementById('btnDraw').onclick = function () {
             //绘制专题图
-            rangeMap.draw(function () {
+            histogramMap.draw(function () {
                 //回调函数
                 console.log("绘制完成");
             });
         };
         document.getElementById('btnClear').onclick = function () {
             //清除专题图
-            rangeMap.clear();
+            histogramMap.clear();
         };
     });
