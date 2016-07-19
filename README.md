@@ -4,7 +4,10 @@ OTMaps
 
 ##在线样例(Samples)
 
-* **热力图:** &emsp; [访问地址](http://vicfeel.github.io/OTMaps/samples/heatMap/)
+* [热力专题图](http://vicfeel.github.io/OTMaps/samples/heatMap/)
+* [范围值专题图](http://vicfeel.github.io/OTMaps/samples/rangeMap/)
+* [柱状统计专题图](http://vicfeel.github.io/OTMaps/samples/histogramMap/)
+* [饼状统计专题图](http://vicfeel.github.io/OTMaps/samples/pieMap/)
 
 ##类库特点(Advantage)
 
@@ -32,6 +35,7 @@ OTMaps
   dist         //压缩后代码，部署请使用该文件夹下OTMap
   src          //源代码，开发者请使用该文件夹下OTMap
   screenshots  //效果截图
+  samples      //使用样例代码
   ```
   
 * **路径配置**
