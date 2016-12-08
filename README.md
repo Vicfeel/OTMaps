@@ -8,6 +8,7 @@ OTMaps
 * [范围值专题图](http://vicfeel.github.io/OTMaps/samples/rangeMap/)
 * [柱状统计专题图](http://vicfeel.github.io/OTMaps/samples/histogramMap/)
 * [饼状统计专题图](http://vicfeel.github.io/OTMaps/samples/pieMap/)
+* [范围值专题图（以独立统计数据）](http://vicfeel.github.io/OTMaps/samples/statDataMap/)
 
 ##类库特点(Advantage)
 
