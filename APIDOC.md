@@ -31,7 +31,7 @@ OTMaps API Document
 |         | simple      |optional   | Bool      |统计对象是否为地图服务中某字段,默认是`true` |
 |         | statData      |required when simple is false| Array of Object |存放统计数据的数组 |
 |         | baseTag      |optional| String | 生成范围图所需字段名 |
-|         | corString    |required when simple is false | Array of String | 包含统计数据与图层字段的对应关系，也可对统计添加`&`标志对统计数据`statData`进行过滤。示例：``` corString:["PAC=ID","&type=1" ```],该语句指定了`statData`中ID与地图服务中PAC字段的对应关系,另外仅对`statData`中type为1的行进行统计制图|
+|         | corString    |required when simple is false | Array of String | 包含统计数据与图层字段的对应关系，也可对统计添加`&`标志对统计数据`statData`进行过滤。示例：``` corString:["ID=PAC","&type=1" ```],该语句指定了`statData`中ID与地图服务中PAC字段的对应关系,另外仅对`statData`中type为1的行进行统计制图|
 | style   |           |           |             |样式相关参数 |
 |         |   statColor      |optional   | String      | 统计指标柱子颜色，系统根据该颜色自动生成渐变色填充其它指标，`"#1abc9c"` `"rgb(39,174,96)"`两种格式均支持，默认是"#c0392b" |
 |         |   baseColor      |optional   | String      | 仅在指定`basetag`后生效，该参数为范围值底图颜色，`"#1abc9c"` `"rgb(39,174,96)"`两种格式均支持，默认是`"#27ae60"` |
@@ -112,7 +112,7 @@ OTMaps API Document
 |         | simple      |optional   | Bool      |统计对象是否为地图服务中某字段,默认是`true` |
 |         | statData      |required when simple is false| Array of Object |存放统计数据的数组 |
 |         | baseTag      |required| String | 生成范围图所需字段名 |
-|         | corString    |required when simple is false | Array of String | 包含统计数据与图层字段的对应关系，也可对统计添加`&`标志对统计数据`statData`进行过滤。示例：``` corString:["PAC=ID","&type=1" ```],该语句指定了`statData`中ID与地图服务中PAC字段的对应关系,另外仅对`statData`中type为1的行进行统计制图|
+|         | corString    |required when simple is false | Array of String | 包含统计数据与图层字段的对应关系，也可对统计添加`&`标志对统计数据`statData`进行过滤。示例：``` corString:["ID=PAC","&type=1" ```],该语句指定了`statData`中ID与地图服务中PAC字段的对应关系,另外仅对`statData`中type为1的行进行统计制图|
 | style   |           |           |             |样式相关参数 |
 |         |   baseColor      |optional   | String      | 范围值底图颜色，`"#1abc9c"` `"rgb(39,174,96)"`两种格式均支持，默认是`"#27ae60"` |
 |         |   classicMethod      |optional   | String | 仅在指定`basetag`后生效，该参数为范围值底图分级方式，当前支持`equal-interval`相等间隔, `natural-breaks`自然分隔和`quantile`分位数分割,默认是`quantile` |
