@@ -2,7 +2,7 @@ OTMaps
 ====
 基于`ArcGIS API for Javascript`封装的专题图制图类库，要求版本`3.13+`
 
-##在线样例(Samples)
+## 在线样例(Samples)
 
 * [热力专题图](http://vicfeel.github.io/OTMaps/samples/heatMap/)
 * [范围值专题图](http://vicfeel.github.io/OTMaps/samples/rangeMap/)
@@ -10,7 +10,7 @@ OTMaps
 * [饼状统计专题图](http://vicfeel.github.io/OTMaps/samples/pieMap/)
 * [范围值专题图（以独立统计数据）](http://vicfeel.github.io/OTMaps/samples/statDataMap/)
 
-##类库特点(Advantage)
+## 类库特点(Advantage)
 
 * **使用方法简单:**
 
@@ -27,7 +27,7 @@ OTMaps
   histogramMap.setConfig(options).setStatData(data).draw(callback);
   ```
 
-##使用方法(Usage)
+## 使用方法(Usage)
 
 * **文件下载**
  
@@ -76,7 +76,8 @@ OTMaps
 
   ```js
   histogramMap.draw();
- ```
+  ```
+
 ##效果截图(screenshots)
 
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/rangeTemplate.png)
@@ -84,12 +85,12 @@ OTMaps
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/pieTemplate.png)
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/heatTemplate.png)
 
-##问题反馈(Questions)
+## 问题反馈(Questions)
 
   如何有任何疑问或更好的建议，请通过 [New Issue](https://github.com/Vicfeel/OTMaps/issues/new) 来向我反馈。
 
 
-##项目许可(License)
+## 项目许可(License)
 
   OTMaps is available under the terms of the [MIT License](https://github.com/Vicfeel/OTMaps/blob/master/LICENSE.md).
 
