@@ -77,19 +77,19 @@ OTMaps
   ```js
   histogramMap.draw();
  ```
-## 效果截图(screenshots)
+##效果截图(screenshots)
 
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/rangeTemplate.png)
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/histogramTemplate.png)
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/pieTemplate.png)
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/heatTemplate.png)
 
-## 问题反馈(Questions)
+##问题反馈(Questions)
 
   如何有任何疑问或更好的建议，请通过 [New Issue](https://github.com/Vicfeel/OTMaps/issues/new) 来向我反馈。
 
 
-## 项目许可(License)
+##项目许可(License)
 
   OTMaps is available under the terms of the [MIT License](https://github.com/Vicfeel/OTMaps/blob/master/LICENSE.md).
 
