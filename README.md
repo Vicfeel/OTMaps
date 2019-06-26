@@ -78,7 +78,7 @@ OTMaps
   histogramMap.draw();
   ```
 
-##效果截图(screenshots)
+## 效果截图(screenshots)
 
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/rangeTemplate.png)
 ![image](https://github.com/Vicfeel/OTMaps/blob/master/screenshots/histogramTemplate.png)
